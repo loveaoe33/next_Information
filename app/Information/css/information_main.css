@@ -1,0 +1,162 @@
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            width: 100%;
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column; /* 讓內容垂直排列 */
+            justify-content: center;
+
+        }
+
+        .container {
+            display: flex;
+            width: 98%;
+            margin: 0 auto;
+            height: 98vh;
+            border: 5px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(45deg, #ff6b6b, #556270) border-box;
+            
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            transition: width 0.3s;
+        }
+        .sidebar.collapsed {
+            width: 60px;
+        }
+        .sidebar h2 {
+            text-align: center;
+            padding: 15px;
+            background: #1a252f;
+            margin: 0;
+        }
+        .menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #34495e;
+            border-bottom: 1px solid #1a252f;
+        }
+        .submenu {
+            display: none;
+            background: #1a252f;
+        }
+        .submenu.active {
+            display: block;
+        }
+        .submenu-item {
+            padding: 10px 30px;
+            color: #ccc;
+        }
+        .toggle-btn {
+            text-align: center;
+            padding: 10px;
+            background: #1a252f;
+            cursor: pointer;
+        }
+        .content {
+            flex-grow: 1;
+            background: white;
+             
+           
+        }
+
+        .content  {
+            flex-grow: 1;
+            background: white;
+             
+           
+        }
+
+        .content .content_Template {
+            flex-grow: 1;
+            background: white;
+             
+           
+        }
+
+        .top-bar {
+            display: flex;
+            font-size:35px;
+            background: #1a252f;
+            color: white;
+            padding: 27px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 🔽🔽🔽 響應式設計 🔽🔽🔽 */
+
+/* 平板（小於 1024px） */
+@media (max-width: 1024px) {
+    .container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+    .sidebar {
+        width: 200px;
+        min-width: 200px;
+    }
+    .top-bar {
+        font-size: 28px;
+        padding: 32px;
+    }  
+}
+
+/* 手機（小於 768px） */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* 改為上下排列 */
+        height: 100vh;
+    }
+    .sidebar {
+        width: 100%;
+        height: 60px; /* 側邊欄變成上方導航列 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .sidebar h2 {
+        font-size: 18px;
+        padding: 10px;
+    }
+    .menu-item {
+        display: none; /* 隱藏選單 */
+    }
+    .toggle-btn {
+        display: block; /* 讓漢堡選單可見 */
+    }
+    .content {
+        flex-grow: 1;
+        height: calc(100vh - 60px); /* 預留側邊欄高度 */
+    }
+    .top-bar {
+        font-size: 24px;
+        padding: 15px;
+    }
+}
+
+/* 更小設備（小於 480px） */
+@media (max-width: 480px) {
+    .sidebar {
+        height: 50px;
+    }
+    .top-bar {
+        font-size: 20px;
+        padding: 10px;
+    }
+}

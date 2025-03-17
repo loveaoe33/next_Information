@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Information_main from "../app/Information/main"
 
 export default function Home() {
   return (

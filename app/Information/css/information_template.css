@@ -127,9 +127,8 @@ body { display: flex; justify-content: center; align-items: center; height: 150v
     100% { transform: translateX(-100%); }
 }
 
-.slide:hover { transform: scale(1.1); }
-.slide:hover ~ .slides { animation-play-state: paused; }
-
+.slide:hover {  animation-play-state: paused; transform: scale(1.1); }
+.slides:hover{  animation-play-state: paused; }
 /* RWD 設計 */
 
 @media (max-width: 1500px) {
@@ -218,7 +217,7 @@ body { display: flex; justify-content: center; align-items: center; height: 150v
 
 @media (max-width: 768px) {
     .slide { width: 200px; height: 200px; margin-top: -30px; }
-    .slide p { font-size: 7px; }
+    .slide p { font-size: 6px; }
     .slide img {
         width: 50%;
         height: 55%;
@@ -236,7 +235,7 @@ body { display: flex; justify-content: center; align-items: center; height: 150v
 
     .slide .forward_Line,
     .slide .detail_Window {
-    margin-top: 3px;
+    margin-top: 5px;
     gap: 8px;
     width: 60px;
     height: 20px;

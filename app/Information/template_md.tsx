@@ -1,10 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import "./css/information_template.css"
+import ModalView  from "./modal";
+import { useState } from "react";
 
 
 export default function template_md(){
-
-    
+const [isOpen ,setIsOpent]=useState<boolean>(false);
+// const showAlertq=()=>{
+//     alert("Hi");
+// }
+const isClose=()=>{
+    setIsOpent(false);
+}
     return(
         <body>
            
@@ -16,7 +25,7 @@ export default function template_md(){
             <p>維生素B群（Vitamin B Complex），又稱維他命B群，是人體無法自行製造，需要從食物獲取的水溶性營養素。</p>
         <div className="button-container"><button className="forward_Line" >詢問院內窗口</button>
 
-        <button className="detail_Window" >了解詳情</button></div>
+        <button className="detail_Window" onClick={()=>setIsOpent(true)}>了解詳情</button></div>
             </div>
             <div className="slide" >
             <h2>高單位B群2</h2>
@@ -35,8 +44,12 @@ export default function template_md(){
         <button className="detail_Window">了解詳情</button></div>
             </div>
         </div>
+
+
     </div>
-          
+    <ModalView isClose={isClose} isOpen={isOpen} title="MD_Product" >
+    你好呀
+        </ModalView>
         </body>
     );
 }

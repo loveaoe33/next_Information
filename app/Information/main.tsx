@@ -1,3 +1,5 @@
+"use client";
+
 import "./css/information_main.css"
 import Template_Md from "./template_md";
 
@@ -48,9 +50,7 @@ export default function main(){
             </div>
             <Template_Md />
 
-            <div className="content_Template">
-            <Template_Md />
-            </div>
+  
         </div>
     </div>
     </body>

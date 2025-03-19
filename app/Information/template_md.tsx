@@ -3,17 +3,20 @@
 import Image from "next/image";
 import "./css/information_template.css"
 import ModalView  from "./modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function template_md(){
 const [isOpen ,setIsOpent]=useState<boolean>(false);
-// const showAlertq=()=>{
-//     alert("Hi");
-// }
 const isClose=()=>{
     setIsOpent(false);
 }
+// useEffect(()=>{
+// const handleResize=()=>setIsOpent(false);
+// window.addEventListener("resize",handleResize);
+// return ()=>window.removeEventListener("resize",handleResize);
+// },[]);
+
     return(
         <body>
            

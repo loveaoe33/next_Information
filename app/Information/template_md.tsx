@@ -50,7 +50,7 @@ const isClose=()=>{
 
 
     </div>
-    <ModalView isClose={isClose} isOpen={isOpen} title="MD_Product" >
+    <ModalView isClose={isClose} isOpen={isOpen} title="高單位B群" >
     你好呀
         </ModalView>
         </body>

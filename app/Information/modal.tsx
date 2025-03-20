@@ -19,7 +19,7 @@ const viewAlert = () => {
 };
 
 // ModalView 組件
-const ModalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
+const modalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
   if (!isOpen) return null;
 
   // 可選擇性地在 Modal 打開時調用 viewAlert
@@ -50,7 +50,7 @@ const ModalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
         </button>  
       <header className="navbar">
         <div className="navbar-container">
-            <h1>一番賞商品介紹</h1>
+            <h1>{title}</h1>
         </div>
     </header>
 
@@ -127,4 +127,4 @@ const ModalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
 // }
 
 
-export default ModalView;
+export default modalView;

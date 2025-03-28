@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import "./css/information_template.css"
-import ModalView  from "./modal";
+import ModalView  from "./modal_product";
 import { useEffect, useState } from "react";
 
 
@@ -36,7 +36,7 @@ const isClose=()=>{
             <p>有助於維持能量正常代謝，增進皮膚和黏膜的健康，有助於體脂肪、膽固醇的合成及胺基酸的代謝</p>
             <div className="button-container"><button className="forward_Line" >詢問院內窗口</button>
         
-        <button className="detail_Window" >了解詳情</button></div>
+        <button className="detail_Window"  onClick={()=>setIsOpent(true)}>了解詳情</button></div>
             </div>
             <div className="slide" >
             <h2>高單位B群3</h2>
@@ -44,7 +44,7 @@ const isClose=()=>{
             <p>有助於維持胺基酸正常代謝、紅血球中紫質的形成、有助於紅血球維持正常型態，幫助色胺酸轉變成菸鹼素，及增進神經系統的健康</p>
             <div className="button-container"><button className="forward_Line" >詢問院內窗口</button>
         
-        <button className="detail_Window">了解詳情</button></div>
+        <button className="detail_Window"  onClick={()=>setIsOpent(true)} >了解詳情</button></div>
             </div>
         </div>
 

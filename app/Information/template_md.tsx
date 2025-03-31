@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import "./css/information_template.css"
-import ModalView  from "./modal_product";
+import ModalView  from "./modal/modal_product";
+import ModalLogin from "./modal/modal_login";
 import { useEffect, useState } from "react";
 
 
@@ -52,7 +53,8 @@ const isClose=()=>{
     </div>
     <ModalView isClose={isClose} isOpen={isOpen} title="高單位B群" >
     你好呀
-        </ModalView>
-        </body>
+    </ModalView>
+
+    </body>
     );
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "react-modal";
 import Image from "next/image";
-import "./css/Information_product.css";
+import "../css/information_product.css";
 
 
 // 修正拼寫為 ModalViewProps，並添加 children（可選）

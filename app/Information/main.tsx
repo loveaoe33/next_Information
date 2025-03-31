@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import "./css/information_main.css"
 import Template_Md from "./template_md";
+import ModalLogin from "./modal/modal_login";
+
 
 export default function main(){
     
@@ -48,8 +50,11 @@ export default function main(){
         console.log("❌ useEffect Cleanup");
         };
     },[])
+    const [isOpen ,setIsOpent]=useState<boolean>(false);
 
-
+    const isClose=()=>{
+        setIsOpent(false);
+    }
     const toggleSidebar=():void=>{
         document.getElementById("sidebar")?.classList.toggle("collapsed");
         
@@ -73,37 +78,42 @@ export default function main(){
             </div>
             <div className="menu-item"  onClick={(e)=>toggleMenu("1")}>🔪手術醫療展示</div>
             <div className="submenu" id="submenu-1" >
-                <div className="submenu-item">子選單 2-1</div>
-                <div className="submenu-item">子選單 2-2</div>
+                <div className="submenu-item">子選單 1-1</div>
+                <div className="submenu-item">子選單 1-2</div>
             </div>
             <div className="menu-item"  onClick={(e)=>toggleMenu("2")}>🩺院內健檢服務展示</div>
             <div className="submenu" id="submenu-2">
                 <div className="submenu-item">子選單 2-1</div>
                 <div className="submenu-item">子選單 2-2</div>
             </div>
-            
             <div className="menu-item"  onClick={(e)=>toggleMenu("3")}>☢️放射健檢展示</div>
             <div className="submenu" id="submenu-3">
-                <div className="submenu-item">子選單 2-1</div>
-                <div className="submenu-item">子選單 2-2</div>
+                <div className="submenu-item">子選單 3-1</div>
+                <div className="submenu-item">子選單 3-2</div>
             </div>
             <div className="menu-item"  onClick={(e)=>toggleMenu("4")}>🦴復健醫療展示</div>
             <div className="submenu" id="submenu-4">
-                <div className="submenu-item">子選單 2-1</div>
-                <div className="submenu-item">子選單 2-2</div>
+                <div className="submenu-item">子選單 4-1</div>
+                <div className="submenu-item">子選單 4-2</div>
             </div>
             <div className="menu-item"  onClick={(e)=>toggleMenu("5")}>📋其他自費服務展示</div>
             <div className="submenu" id="submenu-5">
-                <div className="submenu-item">子選單 2-1</div>
-                <div className="submenu-item">子選單 2-2</div>
+                <div className="submenu-item">子選單 5-1</div>
+                <div className="submenu-item">子選單 5-2</div>
+            </div>
+            <div className="menu-item"  onClick={(e)=>toggleMenu("6")}>⚙️管理者項目維護</div>
+            <div className="submenu" id="submenu-6">
+                <div className="submenu-item">子選單 6-1</div>
+                <div className="submenu-item">子選單 6-2</div>
             </div>
         </div>
         <div className="content">
             <div className="top-bar">
                 <span>系統標題</span>
-                <span>用戶資訊</span>
+                <span>用戶資訊<button onClick={()=>setIsOpent(true)}>登入</button></span>
             </div>
             <Template_Md />
+            <ModalLogin isClose={isClose} isOpen={isOpen} title="管理者登入" account={""} password={""} jwtoken={""} />
         </div>
     </div>
     </body>

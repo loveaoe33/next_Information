@@ -1,0 +1,61 @@
+.login-modal {
+    width: 500px;
+    height: 400px;
+    margin: 250px 250px 250px 850px; /* 上方 50px，左右置中 */
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+.login-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 350px;
+}
+.login-container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+.input-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background: #667eea;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.login-btn:hover {
+    background: #5a67d8;
+}
+.link {
+    margin-top: 1rem;
+    display: block;
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.link:hover {
+    text-decoration: underline;
+}

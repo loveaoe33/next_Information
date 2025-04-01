@@ -33,6 +33,7 @@ const modalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
     ariaHideApp={false} // 在Next.js中，使用此配置来避免错误
     preventScroll={false}
   >
+  <div className="modal_product-body">
     <button
           onClick={isClose}
           style={{
@@ -100,7 +101,7 @@ const modalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
             <p>聯絡我們：bone.hosp@gmail.com</p>
         </div>
     </footer>
-    
+  </div>
      
     </Modal>
   );

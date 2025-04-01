@@ -1,64 +1,212 @@
 
 
 
+"use client";
+import "../Information/css/information_manager.css"
+export default function ManagerView(){
 
-const ManagerView=()=>{
+    const addMajorCategory=()=>{
+
+    }
+    
+    
+    const addMidCategory=()=>{
+    
+    
+    } 
+    
+    const addMinorCategory=()=>{
+    
+    
+    }
+
+    const apiCallMethod=()=>{
+
+    }
 return(
-<div className="dashboard">
+    <div className="manager-body">
+    <div className="dashboard">
         <div className="category-section">
-            <h1>大項類別管理</h1>
+            <h2>大項類別管理</h2>
             <div className="input-group">
-            <input
-                type="text"
-                id="minorInput"
-                placeholder="輸入小項類別"
-            />                  
-                <button >新增項目視窗</button>
-                <button >更新視窗</button>
-                <button >刪除</button>
+                <input type="text" id="majorInput" placeholder="輸入大項類別"/>
+                <button className="addMajor" onClick={addMajorCategory}>新增項目視窗</button>
             </div>
             <div className="category-list" id="majorList"></div>
-        </div>
+            <div className="deatail-container">
+                <h2>已存在類</h2>
+                <div className="input-group">
+                    <input type="text" id="minorInput" placeholder="查詢類別"/>
 
+                </div>
+        
+                <ul id="categoryList">
+                    <li className="category-item">
+                        <span className="category-name">類項 1</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-hide-btn">👁️‍🗨️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                    
+                    <li className="category-item">
+                        <span className="category-name">類項 2</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-hide-btn">👁️‍🗨️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        
         <div className="category-section">
             <h2>中項類別管理</h2>
             <div className="input-group">
                 <select id="majorSelect"></select>
-                <input
-                type="text"
-                id="minorInput"
-                placeholder="輸入中項類別"
-                />                   <button >新增項目視窗</button>
-                <button >更新視窗</button>
-                <button >刪除</button>
+                <input type="text" id="midInput" placeholder="輸入中項類別"/>
+                <button className="addMajor" onClick={addMidCategory}>新增項目視窗</button>
 
             </div>
             <div className="category-list" id="midList"></div>
+
+
+
+
+
+
+
+            <div className="deatail-container">
+                <h2>已存在類</h2>
+        
+                <div className="input-group">
+                    <input type="text" id="minorInput" placeholder="查詢類別"/>
+
+                </div>
+        
+                <ul id="categoryList">
+                    <li className="category-item">
+                        <span className="category-name">類項 1</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-hide-btn">👁️‍🗨️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                    <li className="category-item">
+                        <span className="category-name">類項 2</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-hide-btn">👁️‍🗨️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+
+
+            <div className="deatail-container">
+                <h2>已隱藏類</h2>
+                    <div className="input-group">
+                    <input type="text" id="minorInput" placeholder="查詢類別"/>
+
+                </div>
+                <ul id="categoryList">
+                    <li className="category-item">
+                        <span className="category-name">類項 1</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-view-btn">👁️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                    <li className="category-item">
+                        <span className="category-name">類項 2</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-view-btn">👁️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+            
         </div>
-
         <div className="category-section">
-            <h3>小項類別管理</h3>
+            <h2>小項類別管理</h2>
             <div className="input-group">
-                <select id="midSelect"></select>
-                <input
-                type="text"
-                id="minorInput"
-                placeholder="輸入小項類別"
-                />             
-                <button>新增項目視窗</button>
-                <button >更新視窗</button>
-                <button >刪除</button>
-
+                <select id="majorSelect"></select>
+                <input type="text" id="midInput" placeholder="輸入小項類別"/>
+                <button className="addMajor" onClick={addMidCategory}>新增項目視窗</button>
 
             </div>
-            <div className="category-list" id="minorList"></div>
+            <div className="category-list" id="midList"></div>
+
+            <div className="deatail-container">
+                <h2>已存在類</h2>
+        
+                <div className="input-group">
+                    <input type="text" id="minorInput" placeholder="查詢類別"/>
+
+                </div>
+        
+                <ul id="categoryList">
+                    <li className="category-item">
+                        <span className="category-name">類項 1</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-hide-btn">👁️‍🗨️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                    <li className="category-item">
+                        <span className="category-name">類項 2</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-hide-btn">👁️‍🗨️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+
+
+            <div className="deatail-container">
+                <h2>已隱藏類</h2>
+                    <div className="input-group">
+                    <input type="text" id="minorInput" placeholder="查詢類別"/>
+
+                </div>
+                <ul id="categoryList">
+                    <li className="category-item">
+                        <span className="category-name">類項 1</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-view-btn">👁️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                    <li className="category-item">
+                        <span className="category-name">類項 2</span>
+                        <div className="actions">
+                            <button className="category-toggle-modal-btn">📝</button>
+                            <button className="category-toggle-view-btn">👁️</button>
+                            <button className="category-delete-btn">🗑️</button>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+            
         </div>
     </div>
+</div>
 
 );
-
-
-};
-
-
-export {ManagerView}
+}

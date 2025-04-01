@@ -6,7 +6,7 @@
         }
 
 
-        body {
+        .main-body {
             font-family: Arial, sans-serif;
             height: 100vh;
             width: 100%;
@@ -17,7 +17,7 @@
 
         }
 
-        .container {
+        .main-container {
             display: flex;
             width: 98%;
             margin: 0 auto;
@@ -63,7 +63,7 @@
             padding: 10px 30px;
             color: #ccc;
         }
-        .toggle-btn {
+        .main-toggle-btn {
             text-align: center;
             padding: 10px;
             background: #1a252f;
@@ -99,66 +99,162 @@
             align-items: center;
             justify-content: space-between;
         }
+      .span-account{
+        margin-left: 600px;
+      }
+      .main-login-btn {
+        display: inline-block;
+        min-width: 100px;  /* 確保按鈕不會太小 */
+        padding: 12px 20px; /* 調整內邊距，讓按鈕大小合適 */
+        background: linear-gradient(135deg, #667eea, #764ba2); /* 添加漸變背景 */
+        border: none;
+        border-radius: 8px; /* 圓角按鈕 */
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加陰影讓按鈕更立體 */
+        transition: all 0.3s ease-in-out;
+    }
+    
+    /* 滑鼠懸停時的效果 */
+    .main-login-btn:hover {
+        background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 陰影變強 */
+        transform: scale(1.05); /* 按鈕微微放大 */
+    }
+    
+    /* 按下按鈕時的效果 */
+    .main-login-btn:active {
+        transform: scale(0.95); /* 按下時微微縮小 */
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* 響應式調整 */
+    @media (max-width: 768px) {
+        .main-login-btn {
+            min-width: 80px;
+            font-size: 14px;
+            padding: 10px 16px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .main-login-btn {
+            min-width: 60px;
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+    }
+    
 
-        /* 🔽🔽🔽 響應式設計 🔽🔽🔽 */
+/* 🔽🔽🔽 響應式設計 🔽🔽🔽 */
 
-/* 平板（小於 1024px） */
-@media (max-width: 1024px) {
-    .container {
+/* 平板（小於 1240px） */
+@media (max-width: 1240px) {
+    .main-container {
         width: 100%;
         height: 100vh;
         border-radius: 0;
+        margin: 10px;
+        border-radius: 15px;
+        overflow: hidden;
     }
     .sidebar {
         width: 200px;
-        min-width: 200px;
+        min-width: 230px;
     }
     .top-bar {
-        font-size: 28px;
-        padding: 32px;
-    }  
+        font-size: 22px;
+        padding: 18px;
+    }
+}
+
+/* 平板（小於 1024px） */
+@media (max-width: 1024px) {
+    .main-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .sidebar {
+        width: 180px;
+        min-width: 180px;
+    }
+    .top-bar {
+        font-size: 18px;
+        padding: 16px;
+    }
 }
 
 /* 手機（小於 768px） */
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column; /* 改為上下排列 */
+    .main-container {
+        flex-direction: column;
         height: 100vh;
     }
     .sidebar {
         width: 100%;
-        height: 60px; /* 側邊欄變成上方導航列 */
+        height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
     .sidebar h2 {
-        font-size: 18px;
-        padding: 10px;
+        font-size: 14px;
+        padding: 8px;
     }
     .menu-item {
-        display: none; /* 隱藏選單 */
+        display: none;
     }
-    .toggle-btn {
-        display: block; /* 讓漢堡選單可見 */
-    }
-    .content {
-        flex-grow: 1;
-        height: calc(100vh - 60px); /* 預留側邊欄高度 */
+    .main-toggle-btn {
+        display: block;
     }
     .top-bar {
-        font-size: 24px;
-        padding: 15px;
+        font-size: 16px;
+        padding: 12px;
+    }
+    .main-login-btn {
+        min-width: 60px;
+        font-size: 12px;
+        padding: 5px;
+        background: linear-gradient(135deg, #667eea, #764ba2); /* 添加漸變背景 */
+    border: none;
+    border-radius: 8px; /* 圓角按鈕 */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加陰影讓按鈕更立體 */
+    transition: all 0.3s ease-in-out;
     }
 }
 
-/* 更小設備（小於 480px） */
+/* 超小設備（小於 480px） */
 @media (max-width: 480px) {
     .sidebar {
         height: 50px;
     }
     .top-bar {
-        font-size: 20px;
+        font-size: 14px;
         padding: 10px;
+    }
+    .main-login-btn {
+        min-width: 50px;
+        font-size: 10px;
+        padding: 4px;
+        background: linear-gradient(135deg, #667eea, #764ba2); /* 添加漸變背景 */
+    border: none;
+    border-radius: 8px; /* 圓角按鈕 */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加陰影讓按鈕更立體 */
+    transition: all 0.3s ease-in-out;
     }
 }

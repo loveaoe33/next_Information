@@ -65,11 +65,11 @@ export default function main(){
     }
 
     return (
-    <body>
-    <div className="container">
+    <div className="main-body">
+    <div className="main-container">
         <div className="sidebar" id="sidebar">
             <h2>選單</h2>
-            <div className="toggle-btn" onClick={toggleSidebar}>≡</div>
+            <div className="main-toggle-btn" onClick={toggleSidebar}>≡</div>
             <div className="menu-item" onClick={(e)=>toggleMenu("0")}>💊藥品/保健品服務展示</div>
             <div className="submenu" id="submenu-0" >
 
@@ -109,14 +109,13 @@ export default function main(){
         </div>
         <div className="content">
             <div className="top-bar">
-                <span>系統標題</span>
-                <span>用戶資訊<button onClick={()=>setIsOpent(true)}>登入</button></span>
+                <span className="span-title">系統標題</span>
+                <span className="span-account">用戶資訊</span>
+                <button className="main-login-btn" onClick={()=>setIsOpent(true)}>登入</button>
             </div>
             <Template_Md />
-            <ModalLogin isClose={isClose} isOpen={isOpen} title="管理者登入" account={""} password={""} jwtoken={""} />
-        </div>
+            <ModalLogin isClose={isClose} isOpen={isOpen} title="管理者登入" account={""} password={""} jwtoken={""} />        </div>
     </div>
-    </body>
+    </div>
     );
 }
-

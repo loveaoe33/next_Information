@@ -1,6 +1,4 @@
 
-
-
 "use client";
 import "../Information/css/information_manager.css"
 export default function ManagerView(){

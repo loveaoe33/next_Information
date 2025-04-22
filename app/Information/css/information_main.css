@@ -36,7 +36,7 @@
             transition:  0.3s;
         }
         .sidebar.collapsed {
-            width: 60px;
+            width: 160px;
             overflow-y: auto; /* 允许垂直滚动 */
             overflow-x: hidden;
         }
@@ -52,13 +52,94 @@
             background: #34495e;
             border-bottom: 1px solid #1a252f;
         }
+        .menu-item-kid{
+            cursor: pointer;
+            background: rgb(85, 85, 86);
+            border-bottom: 1px solid #e50e0e;
+
+        }
         .submenu {
             display: none;
             background: #1a252f;
         }
+        .submenu-item-kid{
+            display: none;
+            background: #1a252f;
+            
+
+        }
+
+        .submenu-item-tree{
+            padding: 0 30px;
+            background: #807476;
+            border-bottom: 1px solid #ccc; /* 灰色底線 */
+
+        }
+
+        .item_Detail {
+            border-bottom: 1px solid #e70101; /* 灰色底線 */
+
+        }
+
+        .submenu-tree-Detail{
+            padding: 5px 10px;
+            display: none;
+            background:  #807476;
+
+        }
+        .submenu-tree-Detail.active{
+            display: block;
+
+        }
+        .submenu-item-kid.active{
+            display: block;
+        }
+
+
         .submenu.active {
             display: block;
         }
+
+        .submenu-item-button{
+
+            background: none;
+            border: none;
+            color: inherit; /* 繼承父元素的文字顏色 */
+            font: inherit; /* 繼承父元素的字型 */
+            text-align: center; /* 文字對齊 */
+            cursor: pointer; /* 保持滑鼠指標顯示為可點擊 */
+            outline: none; /* 移除焦點時的輪廓 */
+            display: block; /* 讓按鈕換行 */
+            transition: color 0.3s ease, transform 0.2s ease; /* 增加動畫效果 */
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-left: 20px;
+
+
+        }
+
+        .submenu-item-button:hover {
+            color: #007bff; /* hover 時變更顏色 */
+            transform: scale(1.05); /* 輕微放大 */
+        
+        }
+
+        .submenu-item-button:focus  {
+            outline: none; /* 移除焦點框 */
+
+        
+        }
+
+
+        .submenu-item-button:active  {
+        
+            color: #0056b3; /* 按下時顏色變深 */
+
+        }
+
+
+
+
         .submenu-item {
             padding: 10px 30px;
             color: #ccc;
@@ -72,8 +153,6 @@
         .content {
             flex-grow: 1;
             background: white;
-             
-           
         }
 
         .content  {
@@ -161,13 +240,23 @@
         border-radius: 15px;
         overflow: hidden;
     }
+    .sidebar h2 {
+        font-size: 20px;
+        padding: 8px;
+    }
     .sidebar {
         width: 200px;
-        min-width: 230px;
     }
     .top-bar {
         font-size: 22px;
-        padding: 18px;
+        padding: 21px;
+        background-color: rgb(9, 207, 19);
+
+    }
+    .main-login-btn {
+        min-width: 45px;
+        font-size: 12px;
+        padding: 12px;
     }
 }
 
@@ -181,12 +270,26 @@
     }
     .sidebar {
         width: 180px;
-        min-width: 180px;
     }
+    .sidebar h2 {
+        font-size: 19px;
+        padding: 8px;
+    }
+
     .top-bar {
         font-size: 18px;
         padding: 16px;
+        background-color: rgb(0, 183, 255);
+
     }
+
+    .main-login-btn {
+    min-width: 40px;
+    font-size: 8px;
+    padding: 13px;
+    }
+
+
 }
 
 /* 手機（小於 768px） */
@@ -210,11 +313,17 @@
         display: none;
     }
     .main-toggle-btn {
-        display: block;
+        text-align: center;
+        padding: 8px;
+        background: #1665ae;
+        cursor: pointer;
     }
+
     .top-bar {
         font-size: 16px;
         padding: 12px;
+        background-color: rgb(222, 5, 56);
+
     }
     .main-login-btn {
         min-width: 60px;

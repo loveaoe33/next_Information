@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import "./css/information_main.css"
 import Template_Md from "./template_md";
 import ModalLogin from "./modal/modal_login";
+import Admin from "./manager"
 
 
 export default function main(){
@@ -27,7 +28,7 @@ export default function main(){
             return `${this.ipAddress}:${this.ipPort}/${this.url}/${this.item}`;
           }
     }
-    const [routerMap, setRouterMap] = useState<Map<string, apiRouter>>(() => {
+    const [routerMap, setRouterMap] = useState<Map<string, apiRouter>>(() => {    //api router state
         const apiUrl_MD = new apiRouter("192.168.2.147", "3000", true, "Information", "getMD_Product");
         const apiUrl_Xray = new apiRouter("192.168.2.147", "3000", true, "Information", "getXray_Product");
         const apiUrl_Health = new apiRouter("192.168.2.147", "3000", true, "Information", "getHealth_Product");
@@ -44,6 +45,19 @@ export default function main(){
             ['Other', apiUrl_Other]
         ]);
     });
+
+    const [templateMap, setTemplateMap] = useState<Map<string, boolean>>(()=>{     //template state
+        return new Map([
+            ['template_Md', false],
+            ['template_Admin', false],
+          ])
+
+    } );
+
+
+
+
+
     useEffect(()=>{  //when mount
         console.log("✅ useEffect - 组件初始化完成");
         return () => {
@@ -60,9 +74,35 @@ export default function main(){
         
     }
     const toggleMenu=(index:string):void=>{
-        document.getElementById(`submenu-${index}`)?.classList.toggle("active");
+        document.getElementById(`submenu-item-kid-${index}`)?.classList.toggle("active");
+
 
     }
+
+    const toggleTree=(index:string):void=>{
+        document.getElementById(`submenu-item-tree-${index}`)?.classList.toggle("active");
+
+    }
+
+    const toggleDetail=(index:string):void=>{
+        document.getElementById(`submenu-tree-Detail-${index}`)?.classList.toggle("active");
+    }
+
+    const test=()=>{
+        alert("123");
+    }
+
+    const templateChange=(index:string):void=>{
+        const newMap=new Map(templateMap);
+        if(index==="admin_Class_Maintenance"){
+            setTemplateMap(newMap.set("template_Admin",true));
+        }else if(index==="md_Product_Information"){
+            setTemplateMap(newMap.set("template_Admin",false));
+
+        }
+
+    }
+
 
     return (
     <div className="main-body">
@@ -70,12 +110,30 @@ export default function main(){
         <div className="sidebar" id="sidebar">
             <h2>選單</h2>
             <div className="main-toggle-btn" onClick={toggleSidebar}>≡</div>
-            <div className="menu-item" onClick={(e)=>toggleMenu("0")}>💊藥品/保健品服務展示</div>
-            <div className="submenu" id="submenu-0" >
 
-                <div className="submenu-item">子選單 1-1</div>
-                <div className="submenu-item">子選單 1-2</div>
+            <div className="menu-item" onClick={(e)=>toggleMenu("0")}>💊藥品/保健品服務展示</div>
+            <div className="submenu-item-kid" id="submenu-item-kid-0" onClick={(e)=>toggleTree("0")}>
+
+                <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("0")}>子類別1
+                <div className="submenu-tree-Detail" id="submenu-tree-Detail-0">
+                    <div className="item_Detail" onClick={test }>子類細項1</div>
+                    <div className="item_Detail" onClick={test}>子類細項2</div>
+                </div>
+                </div>
+
+                <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("1")}>子類別2
+                <div className="submenu-tree-Detail" id="submenu-tree-Detail-1">
+                    <div className="item_Detail" onClick={test }>子類細項1</div>
+                    <div className="item_Detail" onClick={test}>子類細項2</div>
+                </div>
+                </div>
+
+ 
             </div>
+
+
+
+        
             <div className="menu-item"  onClick={(e)=>toggleMenu("1")}>🔪手術醫療展示</div>
             <div className="submenu" id="submenu-1" >
                 <div className="submenu-item">子選單 1-1</div>
@@ -98,13 +156,18 @@ export default function main(){
             </div>
             <div className="menu-item"  onClick={(e)=>toggleMenu("5")}>📋其他自費服務展示</div>
             <div className="submenu" id="submenu-5">
-                <div className="submenu-item">子選單 5-1</div>
-                <div className="submenu-item">子選單 5-2</div>
+            <div className="submenu-tree" id="submenu-5-tree">  
+            <button className="submenu-item-button" onClick={(e)=>{templateChange("md_Product_Information")}}>📖項目維護</button>
             </div>
-            <div className="menu-item"  onClick={(e)=>toggleMenu("6")}>⚙️管理者項目維護</div>
+            <div className="submenu-item">子選單 5-2</div>
+            </div>
+            <div className="menu-item"  onClick={(e)=>toggleMenu("6")}>⚙️管理者項目維護</div>   
             <div className="submenu" id="submenu-6">
-                <div className="submenu-item">子選單 6-1</div>
-                <div className="submenu-item">子選單 6-2</div>
+                <button className="submenu-item-button" onClick={(e)=>{templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
+                <button className="submenu-item-button">👨‍💼使用者管理</button>
+
+         
+
             </div>
         </div>
         <div className="content">
@@ -113,7 +176,7 @@ export default function main(){
                 <span className="span-account">用戶資訊</span>
                 <button className="main-login-btn" onClick={()=>setIsOpent(true)}>登入</button>
             </div>
-            <Template_Md />
+            {templateMap.get("template_Admin")?<Admin/>:<Template_Md/>}
             <ModalLogin isClose={isClose} isOpen={isOpen} title="管理者登入" account={""} password={""} jwtoken={""} />        </div>
     </div>
     </div>

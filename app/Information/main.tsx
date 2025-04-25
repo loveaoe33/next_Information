@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import "./css/information_main.css"
 import Template_Md from "./template_md";
 import ModalLogin from "./modal/modal_login";
-import Admin from "./manager"
+import ModalAdmin from "./modal/modal_manager";
 
 
 export default function main(){
@@ -64,11 +64,17 @@ export default function main(){
         console.log("❌ useEffect Cleanup");
         };
     },[])
-    const [isOpen ,setIsOpent]=useState<boolean>(false);
-
-    const isClose=()=>{
-        setIsOpent(false);
+    const [isOpenLogin ,setLoginOpent]=useState<boolean>(false);
+    const [isOpenAdmin ,setAdminOpent]=useState<boolean>(false);
+    const [loginAccount,setAccount]=useState("TEST");
+    const isCloseLogin=()=>{
+        setLoginOpent(false);
     }
+
+    const isCloseAdmin=()=>{
+        setAdminOpent(false);
+    }
+    
     const toggleSidebar=():void=>{
         document.getElementById("sidebar")?.classList.toggle("collapsed");
         
@@ -86,6 +92,12 @@ export default function main(){
 
     const toggleDetail=(index:string):void=>{
         document.getElementById(`submenu-tree-Detail-${index}`)?.classList.toggle("active");
+    }
+
+    const phoneSidebar=():void=>{
+        const sidebar_bar =document.getElementById("sidebar")!;
+        sidebar_bar.classList.toggle('open');
+
     }
 
     const test=()=>{
@@ -107,6 +119,8 @@ export default function main(){
     return (
     <div className="main-body">
     <div className="main-container">
+    <button className="phone-menu-toggle" onClick={phoneSidebar}>☰</button>
+
         <div className="sidebar" id="sidebar">
             <h2>選單</h2>
             <div className="main-toggle-btn" onClick={toggleSidebar}>≡</div>
@@ -116,15 +130,15 @@ export default function main(){
 
                 <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("0")}>子類別1
                 <div className="submenu-tree-Detail" id="submenu-tree-Detail-0">
-                    <div className="item_Detail" onClick={test }>子類細項1</div>
-                    <div className="item_Detail" onClick={test}>子類細項2</div>
+                <button className="submenu-item-button" onClick={(e)=>{e.stopPropagation(),templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
+                <button className="submenu-item-button ">👨‍💼使用者管理</button>
                 </div>
                 </div>
 
                 <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("1")}>子類別2
                 <div className="submenu-tree-Detail" id="submenu-tree-Detail-1">
-                    <div className="item_Detail" onClick={test }>子類細項1</div>
-                    <div className="item_Detail" onClick={test}>子類細項2</div>
+                <button className="submenu-item-button" onClick={(e)=>{templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
+                <button className="submenu-item-button">👨‍💼使用者管理</button>
                 </div>
                 </div>
 
@@ -173,11 +187,13 @@ export default function main(){
         <div className="content">
             <div className="top-bar">
                 <span className="span-title">系統標題</span>
-                <span className="span-account">用戶資訊</span>
-                <button className="main-login-btn" onClick={()=>setIsOpent(true)}>登入</button>
+                <span className="span-account">用戶資訊:</span>
+                <button className="main-login-btn" onClick={()=>setLoginOpent(true)}>登入</button>
             </div>
-            {templateMap.get("template_Admin")?<Admin/>:<Template_Md/>}
-            <ModalLogin isClose={isClose} isOpen={isOpen} title="管理者登入" account={""} password={""} jwtoken={""} />        </div>
+            {/* {templateMap.get("template_Admin")?<Admin/>:<Template_Md/>} */}
+            <ModalLogin isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />       
+      </div>
+
     </div>
     </div>
     );

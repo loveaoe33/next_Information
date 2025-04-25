@@ -4,7 +4,9 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        .phone-menu-toggle{
+            display: none;
+        }
 
         .main-body {
             font-family: Arial, sans-serif;
@@ -69,24 +71,54 @@
 
         }
 
-        .submenu-item-tree{
-            padding: 0 30px;
-            background: #807476;
-            border-bottom: 1px solid #ccc; /* 灰色底線 */
-
+        .submenu-item-tree {
+            padding: 12px 24px;
+            background-color: #3a3f4b; /* 深灰藍底，更柔和不刺眼 */
+            border-bottom: 1px solid #5a5f66; /* 分隔線清晰但不突兀 */
+            border-left: 4px solid #00bcd4; /* 藍綠色導引條，凸顯層級 */
+            transition: background-color 0.3s ease;
         }
+        
+        .submenu-item-tree:hover {
+            background-color: #4a505d; /* hover 時稍微變亮，提升互動感 */
+        }
+        
+        .submenu-item-tree button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #f0f0f0; /* 高對比文字 */
+            background: none;
+            border: none;
+            padding: 6px 0;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: color 0.2s ease;
+        }
+        
+        .submenu-item-tree button:hover {
+            color: #00bcd4; /* hover 時文字變同色系亮藍綠 */
+        }
+        
 
         .item_Detail {
             border-bottom: 1px solid #e70101; /* 灰色底線 */
 
         }
 
-        .submenu-tree-Detail{
-            padding: 5px 10px;
-            display: none;
-            background:  #807476;
-
+        .submenu-tree-Detail {
+            padding: 8px 16px;
+            display: none; /* 預設隱藏，根據選單邏輯控制顯示 */
+            background-color: #2f343f; /* 更深一階的灰藍，區分層級 */
+            color: #f0f0f0; /* 高對比白字 */
+            font-size: 13px;
+            border-left: 2px solid #d40000; /* 與上層一樣的強調色，但細條 */
         }
+        
+
+        
         .submenu-tree-Detail.active{
             display: block;
 
@@ -111,7 +143,6 @@
             outline: none; /* 移除焦點時的輪廓 */
             display: block; /* 讓按鈕換行 */
             transition: color 0.3s ease, transform 0.2s ease; /* 增加動畫效果 */
-            padding: 10px 15px;
             cursor: pointer;
             margin-left: 20px;
 
@@ -147,9 +178,11 @@
         .main-toggle-btn {
             text-align: center;
             padding: 10px;
+            font-size: 20px;
             background: #1a252f;
             cursor: pointer;
         }
+
         .content {
             flex-grow: 1;
             background: white;
@@ -174,7 +207,7 @@
             font-size:35px;
             background: #1a252f;
             color: white;
-            padding: 27px;
+            padding: 29px;
             align-items: center;
             justify-content: space-between;
         }
@@ -210,22 +243,7 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     
-    /* 響應式調整 */
-    @media (max-width: 768px) {
-        .main-login-btn {
-            min-width: 80px;
-            font-size: 14px;
-            padding: 10px 16px;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .main-login-btn {
-            min-width: 60px;
-            font-size: 12px;
-            padding: 8px 12px;
-        }
-    }
+
     
 
 /* 🔽🔽🔽 響應式設計 🔽🔽🔽 */
@@ -243,13 +261,14 @@
     .sidebar h2 {
         font-size: 20px;
         padding: 8px;
+        
     }
     .sidebar {
         width: 200px;
     }
     .top-bar {
         font-size: 22px;
-        padding: 21px;
+        padding: 23px;
         background-color: rgb(9, 207, 19);
 
     }
@@ -294,24 +313,110 @@
 
 /* 手機（小於 768px） */
 @media (max-width: 768px) {
+
     .main-container {
         flex-direction: column;
         height: 100vh;
     }
+    .phone-menu-toggle{
+        display: block;
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-2px); }
+        40% { transform: translateX(2px); }
+        60% { transform: translateX(-2px); }
+        80% { transform: translateX(2px); }
+      }
+      
+      .phone-menu-toggle {
+        width: 10%;
+        padding: 7px 10px;
+        font-size: 10px;
+        font-weight: 600;
+        background: linear-gradient(to right, #4e54c8, #8f94fb); /* 藍紫漸層 */
+        color: white;
+        border: none;
+        border-radius: 0 0 12px 12px; /* 下方圓角 */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        animation: shake 2.5s ease-in-out 3s infinite;
+        transition: background 0.3s ease;
+        
+        position: fixed;
+        top: 0;
+        left: 46%;
+        z-index: 9999;
+      }
+      
+      .phone-menu-toggle:hover {
+        background: linear-gradient(to right, #5a5fdc, #a0a6ff); /* hover 更亮 */
+      }
+
+      
+    .main-toggle-btn{
+        font-size: 10px;
+    }
     .sidebar {
-        width: 100%;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 130px;
+        height: 100vh;
+        background-color: #2c3e50;
+        color: white;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    /* 展開時滑入畫面 */
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar.collapsed {
+        width: 130px;
+        overflow-y: auto; /* 允许垂直滚动 */
+        overflow-x: hidden;
+    }
+    /* 開關按鈕（可放在左上角） */
+    .menu-toggle {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 1100;
+        background-color: #00bcd4;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 18px;
+        border-radius: 4px;
+        cursor: pointer;
     }
     .sidebar h2 {
-        font-size: 14px;
+        font-size: 12px;
         padding: 8px;
     }
-    .menu-item {
+    .submenu-item-tree {
+        padding: 3px 0;
+        font-size: 8px;
+        padding: 6px 12px;
+
+    }
+    .main-toggle-btn{
         display: none;
     }
+    .menu-item {
+        font-size: 9px;
+    }
+
+    .submenu-item-tree Button{
+        gap: 0;
+        padding: 2px 0;
+        font-size: 8px;
+    }
+
+
     .main-toggle-btn {
         text-align: center;
         padding: 8px;
@@ -325,21 +430,7 @@
         background-color: rgb(222, 5, 56);
 
     }
-    .main-login-btn {
-        min-width: 60px;
-        font-size: 12px;
-        padding: 5px;
-        background: linear-gradient(135deg, #667eea, #764ba2); /* 添加漸變背景 */
-    border: none;
-    border-radius: 8px; /* 圓角按鈕 */
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加陰影讓按鈕更立體 */
-    transition: all 0.3s ease-in-out;
-    }
+
 }
 
 /* 超小設備（小於 480px） */
@@ -353,7 +444,7 @@
     }
     .main-login-btn {
         min-width: 50px;
-        font-size: 10px;
+        font-size: 1px;
         padding: 4px;
         background: linear-gradient(135deg, #667eea, #764ba2); /* 添加漸變背景 */
     border: none;

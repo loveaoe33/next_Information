@@ -58,7 +58,7 @@ const modalView = ({ isClose, isOpen, title  }: LoginAccount) => {
         <h2>{title}</h2>
         <form>
             <div className="input-group">
-                <label htmlFor="username">使用者名稱</label>
+                <label htmlFor="username">名稱</label>
                 <input type="text" id="username" name="username" required/>
             </div>
             <div className="input-group">

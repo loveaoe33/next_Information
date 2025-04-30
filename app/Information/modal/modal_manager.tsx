@@ -3,16 +3,15 @@ import Modal from "react-modal";
 import "../css/information_manager.css";
 
 // 修正拼寫為 ModalViewProps，並添加 children（可選）
-interface LoginAccount {
+interface LoginCheck {
     isClose: () => void;
     isOpen: boolean;
     account:String;
-    password:String;
     jwtoken:String;
     title: string;
   }
 
-const modalView=({ isClose, isOpen, title  }: LoginAccount)=>{
+const modalView=({ isClose, isOpen ,title,account,jwtoken  }: LoginCheck)=>{
     const addMajorCategory=()=>{
 
     }

@@ -108,6 +108,7 @@ export default function main(){
         const newMap=new Map(templateMap);
         if(index==="admin_Class_Maintenance"){
             setTemplateMap(newMap.set("template_Admin",true));
+            setAdminOpent(true);
         }else if(index==="md_Product_Information"){
             setTemplateMap(newMap.set("template_Admin",false));
 
@@ -130,7 +131,7 @@ export default function main(){
 
                 <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("0")}>子類別1
                 <div className="submenu-tree-Detail" id="submenu-tree-Detail-0">
-                <button className="submenu-item-button" onClick={(e)=>{e.stopPropagation(),templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
+                <button className="submenu-item-button" onClick={(e)=>{e.stopPropagation(),templateChange("md_Product_Information")}}>📖項目維護</button>
                 <button className="submenu-item-button ">👨‍💼使用者管理</button>
                 </div>
                 </div>
@@ -145,44 +146,26 @@ export default function main(){
  
             </div>
 
+            <div className="menu-item"  onClick={(e)=>toggleMenu("5")}>⚙️管理者項目維護</div>   
+            <div className="submenu-item-kid" id="submenu-item-kid-5" onClick={(e)=>toggleTree("5")}>
+            <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("5")}>子類別1
+            <div className="submenu-tree-Detail" id="submenu-tree-Detail-5">
+            <button className="submenu-item-button" onClick={(e)=>{e.stopPropagation(),templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
+            <button className="submenu-item-button ">👨‍💼使用者管理</button>
+            </div>
+            </div>
 
-
-        
-            <div className="menu-item"  onClick={(e)=>toggleMenu("1")}>🔪手術醫療展示</div>
-            <div className="submenu" id="submenu-1" >
-                <div className="submenu-item">子選單 1-1</div>
-                <div className="submenu-item">子選單 1-2</div>
+            <div className="submenu-item-tree"   onClick={(e)=>toggleDetail("6")}>子類別2
+            <div className="submenu-tree-Detail" id="submenu-tree-Detail-6">
+            <button className="submenu-item-button" onClick={(e)=>{templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
+            <button className="submenu-item-button">👨‍💼使用者管理</button>
             </div>
-            <div className="menu-item"  onClick={(e)=>toggleMenu("2")}>🩺院內健檢服務展示</div>
-            <div className="submenu" id="submenu-2">
-                <div className="submenu-item">子選單 2-1</div>
-                <div className="submenu-item">子選單 2-2</div>
             </div>
-            <div className="menu-item"  onClick={(e)=>toggleMenu("3")}>☢️放射健檢展示</div>
-            <div className="submenu" id="submenu-3">
-                <div className="submenu-item">子選單 3-1</div>
-                <div className="submenu-item">子選單 3-2</div>
-            </div>
-            <div className="menu-item"  onClick={(e)=>toggleMenu("4")}>🦴復健醫療展示</div>
-            <div className="submenu" id="submenu-4">
-                <div className="submenu-item">子選單 4-1</div>
-                <div className="submenu-item">子選單 4-2</div>
-            </div>
-            <div className="menu-item"  onClick={(e)=>toggleMenu("5")}>📋其他自費服務展示</div>
-            <div className="submenu" id="submenu-5">
-            <div className="submenu-tree" id="submenu-5-tree">  
-            <button className="submenu-item-button" onClick={(e)=>{templateChange("md_Product_Information")}}>📖項目維護</button>
-            </div>
-            <div className="submenu-item">子選單 5-2</div>
-            </div>
-            <div className="menu-item"  onClick={(e)=>toggleMenu("6")}>⚙️管理者項目維護</div>   
-            <div className="submenu" id="submenu-6">
-                <button className="submenu-item-button" onClick={(e)=>{templateChange("admin_Class_Maintenance")}}>📖項目維護</button>
-                <button className="submenu-item-button">👨‍💼使用者管理</button>
+</div>
 
          
 
-            </div>
+            
         </div>
         <div className="content">
             <div className="top-bar">
@@ -190,7 +173,7 @@ export default function main(){
                 <span className="span-account">用戶資訊:</span>
                 <button className="main-login-btn" onClick={()=>setLoginOpent(true)}>登入</button>
             </div>
-            {/* {templateMap.get("template_Admin")?<Admin/>:<Template_Md/>} */}
+            {templateMap.get("template_Admin")?<ModalAdmin  isClose={isCloseAdmin} isOpen={isOpenAdmin} title={""} account={""} jwtoken={""}     />:<Template_Md/>}
             <ModalLogin isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />       
       </div>
 

@@ -11,7 +11,7 @@ interface ModalViewProps {
   isClose: () => void;
   isOpen: boolean;
   title: string;
-  children?: string; // 添加 children 以支援內容
+  children?: string  | null; // 可為undefind或null
 }
 
 const viewAlert = () => {

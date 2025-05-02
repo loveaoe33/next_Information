@@ -1,34 +1,41 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const userId = params.id;
-
+// GET Method
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id')
+  const apiRouter=searchParams.get("api");
+  const response=await fetch(`${apiRouter}/Product_Imformation/setProduct_Information`);
+  const result=await response.json();
   const data = {
-    message: `Getting user with ID: ${userId}`,
-    userId,
+    externalData:result,
     timestamp: new Date().toISOString()
   };
 
-  return NextResponse.json(data);
+  return NextResponse.json(data, { status: 200 });
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const userId = params.id;
-  const body = await request.json();
-  const data = {
-    message: `Updating user with ID: ${userId}`,
-    userId,
-    updatedData: body,
-    timestamp: new Date().toISOString()
-  };
+// POST Method
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();   //呼叫時會丟json過來
+    const { apiRouter }=body;
 
-  return NextResponse.json(data);
+    const response = await fetch(`${apiRouter}/Product_Imformation/setProduct_Information`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body.user)
+    });
+
+    return NextResponse.json(response, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Invalid JSON format' },
+      { status: 400 }
+    );
+  }
+
+
 }
 
 

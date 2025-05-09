@@ -10,9 +10,9 @@ import "../css/information_login.css";
 interface LoginAccount {
   isClose: () => void;
   isOpen: boolean;
-  account:String;
-  password:String;
-  jwtoken:String;
+  account:string;
+  password:string;
+  jwtoken:string;
   title: string;
 }
 

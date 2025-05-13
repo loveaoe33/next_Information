@@ -1,10 +1,13 @@
 
 "use client";
+import { useState } from "react";
 import "../Information/css/information_manager.css"
 export default function ManagerView(){
-
+const [MajorItem,setMajor]=useState<string>("");
+const [MidItem,setMid]=useState<string>("");
+const [Minor,setMinor]=useState<string>("");
     const addMajorCategory=()=>{
-
+       
     }
     
     
@@ -28,7 +31,7 @@ return(
             <h2>大項類別管理</h2>
             <div className="input-group">
                 <input type="text" id="majorInput" placeholder="輸入大項類別"/>
-                <button className="addMajor" onClick={addMajorCategory}>新增項目視窗</button>
+                <button className="addMajor" onClick={addMajorCategory}>新增大項目</button>
             </div>
             <div className="category-list" id="majorList"></div>
             <div className="deatail-container">
@@ -66,7 +69,7 @@ return(
             <div className="input-group">
                 <select id="majorSelect"></select>
                 <input type="text" id="midInput" placeholder="輸入中項類別"/>
-                <button className="addMajor" onClick={addMidCategory}>新增項目視窗</button>
+                <button className="addMajor" onClick={addMidCategory}>新增中項目</button>
 
             </div>
             <div className="category-list" id="midList"></div>
@@ -140,7 +143,7 @@ return(
             <div className="input-group">
                 <select id="majorSelect"></select>
                 <input type="text" id="midInput" placeholder="輸入小項類別"/>
-                <button className="addMajor" onClick={addMidCategory}>新增項目視窗</button>
+                <button className="addMajor" onClick={addMidCategory}>新增小項目</button>
 
             </div>
             <div className="category-list" id="midList"></div>

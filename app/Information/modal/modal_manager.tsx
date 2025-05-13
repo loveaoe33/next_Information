@@ -1,6 +1,8 @@
 "use client";
 import Modal from "react-modal";
 import "../css/information_manager.css";
+import { useState } from "react";
+import * as api_Manager from "../lib/information_state";
 
 // 修正拼寫為 ModalViewProps，並添加 children（可選）
 interface LoginCheck {
@@ -11,25 +13,30 @@ interface LoginCheck {
     title: string;
 }
 
+
+
 const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => {
-    const addMajorCategory = () => {
+    const [MajorItem, setMajor] = useState<string>("");
+    const [MidItem, setMid] = useState<string>("");
+    const [Minor, setMinor] = useState<string>("");
+    const addMajorCategory = (): void => {
+        alert(MajorItem);
+    }
+
+
+    const addMidCategory = (): void => {
+        alert(MajorItem);
+
+
+    }
+
+    const addMinorCategory = (): void => {
+        alert(MajorItem);
+
 
     }
 
 
-    const addMidCategory = () => {
-
-
-    }
-
-    const addMinorCategory = () => {
-
-
-    }
-
-    const apiCallMethod = () => {
-
-    }
     return (<Modal
         isOpen={isOpen}
         onRequestClose={isClose}
@@ -57,8 +64,8 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                 <div className="category-section">
                     <h2>大項類別管理</h2>
                     <div className="input-group">
-                        <input type="text" id="majorInput" placeholder="輸入大項類別" />
-                        <button className="addMajor" onClick={addMajorCategory}>新增項目視窗</button>
+                        <input type="text" id="majorInput" value={MajorItem} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)} placeholder="輸入大項類別" />
+                        <button className="addMajor" onClick={addMajorCategory}>新增大項目</button>
                     </div>
                     <div className="category-list" id="majorList"></div>
                     <div className="deatail-container">
@@ -72,7 +79,6 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                             <li className="category-item">
                                 <span className="category-name">類項 1</span>
                                 <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
                                     <button className="category-toggle-hide-btn">👁️‍🗨️</button>
                                     <button className="category-delete-btn">🗑️</button>
                                 </div>
@@ -81,7 +87,6 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                             <li className="category-item">
                                 <span className="category-name">類項 2</span>
                                 <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
                                     <button className="category-toggle-hide-btn">👁️‍🗨️</button>
                                     <button className="category-delete-btn">🗑️</button>
                                 </div>
@@ -96,7 +101,7 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                     <div className="input-group">
                         <select id="majorSelect"></select>
                         <input type="text" id="midInput" placeholder="輸入中項類別" />
-                        <button className="addMajor" onClick={addMidCategory}>新增項目視窗</button>
+                        <button className="addMajor" onClick={addMidCategory}>新增中項目</button>
 
                     </div>
                     <div className="category-list" id="midList"></div>
@@ -119,7 +124,6 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                             <li className="category-item">
                                 <span className="category-name">類項 1</span>
                                 <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
                                     <button className="category-toggle-hide-btn">👁️‍🗨️</button>
                                     <button className="category-delete-btn">🗑️</button>
                                 </div>
@@ -127,7 +131,6 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                             <li className="category-item">
                                 <span className="category-name">類項 2</span>
                                 <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
                                     <button className="category-toggle-hide-btn">👁️‍🗨️</button>
                                     <button className="category-delete-btn">🗑️</button>
                                 </div>
@@ -147,7 +150,6 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                             <li className="category-item">
                                 <span className="category-name">類項 1</span>
                                 <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
                                     <button className="category-toggle-view-btn">👁️</button>
                                     <button className="category-delete-btn">🗑️</button>
                                 </div>
@@ -155,7 +157,6 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                             <li className="category-item">
                                 <span className="category-name">類項 2</span>
                                 <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
                                     <button className="category-toggle-view-btn">👁️</button>
                                     <button className="category-delete-btn">🗑️</button>
                                 </div>
@@ -170,7 +171,7 @@ const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => 
                     <div className="input-group">
                         <select id="majorSelect"></select>
                         <input type="text" id="midInput" placeholder="輸入小項類別" />
-                        <button className="addMajor" onClick={addMidCategory}>新增項目視窗</button>
+                        <button className="addMajor" onClick={addMidCategory}>新增小項目</button>
 
                     </div>
                     <div className="category-list" id="midList"></div>

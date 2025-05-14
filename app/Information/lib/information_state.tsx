@@ -1,10 +1,12 @@
+"use client";
+
 import { useState } from "react"
 
 
 
-const [domain, setDomain] = useState("http://localhost:8080");
 interface Category {
-  add: (data:Category) => void;
+  fecth: () => void;
+  add: (data: Category) => void;
   delete: () => void;
   update: () => void;
   hide: () => void;
@@ -25,19 +27,41 @@ class MajorCategory implements Category {
   private create_date: String | undefined | null;
   private create_name: String | undefined | null;
   private show: Boolean | undefined | null;
-  constructor() {
+  private domain: String | undefined | null;
+  constructor(id: number, header: string, hashcode: string, domain: string) {
+    this.id = id;
+    this.header = header;
+    this.hashcode = hashcode;
+    this.domain = domain;
   }
-  add = async (data:Category) => {
+  fecth= async ():Promise<void> => {
+    const res =await fetch('/api/productAll',{
+       method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+    })
+    console.log(`大項目:`);
+    
+  };
+  add = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/setProduct_Information`;
 
-      const res = await fetch(this.api_url, {
+      const res = await fetch('/app/Information/api/productAll', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: "",
+          user: {
+            account: "loveaoe33",
+            toker: "",
+            level: 0,
+          }
         }),
       })
 
@@ -52,7 +76,6 @@ class MajorCategory implements Category {
   delete = async () => {
 
     try {
-      this.api_url = `${domain}/Product_Imformation/deleteProduct_Information`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -78,7 +101,6 @@ class MajorCategory implements Category {
   }
   hide = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_State`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -101,7 +123,6 @@ class MajorCategory implements Category {
   }
   shows = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_State`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -155,13 +176,17 @@ class MidCategory implements Category {
   private create_name: String | undefined | null;
   private show: Boolean | undefined | null;
   private focus_number: number | undefined | null;
+  private domain: string | undefined | null;
 
-  constructor() {
-
+  constructor(domain: string) {
+    this.domain = domain;
   }
-  add = async (data:Category) => {
+    fecth= ():void => {
+    console.log(`大項目:`);
+
+  };
+  add = async (data: Category) => {
     try {
-      this.api_url = `${domain}/Product_Imformation/setProduct_Information`;
       const res = await fetch(this.api_url, {
         method: 'POST',
         headers: {
@@ -184,7 +209,6 @@ class MidCategory implements Category {
 
 
     try {
-      this.api_url = `${domain}/Product_Imformation/deleteProduct_Information`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -210,7 +234,6 @@ class MidCategory implements Category {
   }
   hide = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_State`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -233,7 +256,6 @@ class MidCategory implements Category {
   }
   shows = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_State`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -293,13 +315,18 @@ class MinorCategory implements Category {
   private img_url: String | undefined | null;
   private show: Boolean | undefined | null;
   private content_json: String | undefined | null;
-
-  constructor() {
-
+  private domain: String | undefined | null;
+  constructor(domain: string) {
+    this.domain = domain
   }
-  add = async (data:Category) => {
+   fecth= ():void => {
+    console.log(`大項目:`);
+
+  };
+
+
+  add = async (data: Category) => {
     try {
-      this.api_url = `${domain}/Product_Imformation/setProduct_Information`;
       const res = await fetch(this.api_url, {
         method: 'POST',
         headers: {
@@ -321,7 +348,6 @@ class MinorCategory implements Category {
   }
   delete = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/deleteProduct_Information`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -344,7 +370,6 @@ class MinorCategory implements Category {
   }
   update = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_Tree_Detail`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -366,7 +391,6 @@ class MinorCategory implements Category {
   }
   hide = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_State`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -389,7 +413,6 @@ class MinorCategory implements Category {
   }
   shows = async () => {
     try {
-      this.api_url = `${domain}/Product_Imformation/updateProduct_State`;
 
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -412,7 +435,6 @@ class MinorCategory implements Category {
 
   }
   touch = () => {
-    this.api_url = `${domain}/Product_Imformation/setNumber_Value`;
 
   }
   static fromJSOM = () => {
@@ -436,68 +458,68 @@ class MinorCategory implements Category {
 
 
 
-const [MajorItem, setMajor] = useState<Map<String, MajorCategory[]>>(new Map());
-const [MidItem, setMid] = useState<Map<String, MidCategory[]>>(new Map());
-const [MinorItem, setMinor] = useState<Map<String, MinorCategory[]>>(new Map());
+// const [MajorItem, setMajor] = useState<Map<String, MajorCategory[]>>(new Map());
+// const [MidItem, setMid] = useState<Map<String, MidCategory[]>>(new Map());
+// const [MinorItem, setMinor] = useState<Map<String, MinorCategory[]>>(new Map());
 
 
 
 
-const fetchMajorCategory = async () => {
-  const api_url = `${domain}/Product_Imformation/getProduct_Information`;
-  //   const res=await axios.get("/api/");
-  const response = await fetch("/api/productAll");
-  if (!response) throw new Error("fetch Major_API Error");
-  const data = await response.json();
-  console.log(`大項目:${data}`);
+// const fetchMajorCategory = async () => {
+//   const api_url = `${domain}/Product_Imformation/getProduct_Information`;
+//   //   const res=await axios.get("/api/");
+//   const response = await fetch("/api/productAll");
+//   if (!response) throw new Error("fetch Major_API Error");
+//   const data = await response.json();
+//   console.log(`大項目:${data}`);
 
-}
+// }
 
-const fetchMidCategory = async () => {
-  const api_url = `${domain}/Product_Imformation/getProduct_Kid_Information`;
+// const fetchMidCategory = async () => {
+//   const api_url = `${domain}/Product_Imformation/getProduct_Kid_Information`;
 
-  const response = await fetch("/api/productKid");
-  if (!response) throw new Error("fetch Mid_API Error");
-  const data = await response.json();
-  console.log(`中項目:${data}`);
-}
+//   const response = await fetch("/api/productKid");
+//   if (!response) throw new Error("fetch Mid_API Error");
+//   const data = await response.json();
+//   console.log(`中項目:${data}`);
+// }
 
-const fetchMinorCategory = async () => {
-  const api_url = `${domain}/Product_Imformation/getProduct_Tree_Information`;
+// const fetchMinorCategory = async () => {
+//   const api_url = `${domain}/Product_Imformation/getProduct_Tree_Information`;
 
-  const response = await fetch("/api/productDetail");
-  if (!response) throw new Error("fetch Minor_API Error");
-  const data = await response.json();
-  console.log(`小項目:${data}`);
-}
-
-
-const fetchMinorDetail = async () => {
-  const api_url = `${domain}/Product_Imformation/getProduct_Tree_Detail`;
-
-  const response = await fetch("/api/productDetail");
-  if (!response) throw new Error("fetch Minor_API Error");
-  const data = await response.json();
-  console.log(`小項目內容:${data}`);
-}
+//   const response = await fetch("/api/productDetail");
+//   if (!response) throw new Error("fetch Minor_API Error");
+//   const data = await response.json();
+//   console.log(`小項目:${data}`);
+// }
 
 
+// const fetchMinorDetail = async () => {
+//   const api_url = `${domain}/Product_Imformation/getProduct_Tree_Detail`;
 
-export function MajorCategory_Api(): MajorCategory {
-  const Major = new MajorCategory();
+//   const response = await fetch("/api/productDetail");
+//   if (!response) throw new Error("fetch Minor_API Error");
+//   const data = await response.json();
+//   console.log(`小項目內容:${data}`);
+// }
+
+
+
+export function MajorCategory_Api(id: number, header: string, hashcode: string, domain: string): MajorCategory {
+  const Major = new MajorCategory(id, header, hashcode, domain);
   return Major;
 
 }
 
-export function MidCategory_Api(): MidCategory {
-  const Kid = new MidCategory();
+export function MidCategory_Api(domain: string): MidCategory {
+  const Kid = new MidCategory(domain);
   return Kid;
 
 }
 
 
-export function MinorCategory_Api(): MinorCategory {
-  const Minor = new MinorCategory();
+export function MinorCategory_Api(domain: string): MinorCategory {
+  const Minor = new MinorCategory(domain);
   return Minor;
 
 

@@ -16,11 +16,13 @@ interface LoginCheck {
 
 
 const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => {
+    const [domain, setDomain] = useState('http://localhost:8080');
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
     const [Minor, setMinor] = useState<string>("");
     const addMajorCategory = (): void => {
-        alert(MajorItem);
+        const api=api_Manager.MajorCategory_Api(0,MajorItem,"",domain);
+        api.fecth();
     }
 
 

@@ -2,15 +2,11 @@ import { NextResponse } from 'next/server';
 
 
 type RequestBody = {
-  id: number
-  hashcode: string,
-  domainUrl: string,
-  header: string,
-  user: {
-    account: string,
-    toker: string,
-    level: number,
-  }
+  id: number | undefined | null;
+  hashcode: string | undefined | null;
+  domainUrl: string | undefined | null;
+  header: string | undefined | null;
+  userData:string | undefined | null;
 }
 // GET Method
 export async function GET(request: Request) {   //get all data
@@ -27,9 +23,10 @@ export async function GET(request: Request) {   //get all data
 }
 // POST Method
 export async function POST(request: Request) {   //insert data
+
   try {
     const body = await request.json();   //呼叫時會丟json過來
-    const { id, hashcode, domainUrl, header, user }: RequestBody = body;
+    const { id, hashcode, domainUrl, header, userData }: RequestBody = body;
     console.log("url:"+domainUrl);
     const response = await fetch(`${domainUrl}/Product_Imformation/setProduct_Information?caseSelect=marjorCase`, {
       method: 'POST',
@@ -38,13 +35,12 @@ export async function POST(request: Request) {   //insert data
         id: id,
         hashcode: hashcode,
         header: header,
-        user: user,
+        userString: userData,
       })
     });
     const data: any = await response.json();
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error('POST API error:', error);
     return NextResponse.json(
       { error: 'Invalid JSON format' },
       { status: 400 }

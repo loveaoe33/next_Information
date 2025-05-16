@@ -20,34 +20,37 @@ interface Category {
 class MajorCategory implements Category {
   private api_url: string = "";
   private id: number | undefined | null;;
-  private header: String | undefined | null;
-  private kid_header: String | undefined | null;
-  private tree_header: String | undefined | null;
-  private hashcode: String | undefined | null;
-  private create_date: String | undefined | null;
-  private create_name: String | undefined | null;
+  private header: string | undefined | null;
+  private kid_header: string | undefined | null;
+  private tree_header: string | undefined | null;
+  private hashcode: string | undefined | null;
+  private create_date: string | undefined | null;
+  private create_name: string | undefined | null;
   private show: Boolean | undefined | null;
-  private domain: String | undefined | null;
-  constructor(id: number, header: string, hashcode: string, domain: string) {
+  private domain: string | undefined | null;
+  private userData:string| undefined | null;
+  constructor(id: number, header: string, hashcode: string, domain: string,userData:string) {
     this.id = id;
     this.header = header;
     this.hashcode = hashcode;
+    this.userData=userData;
     this.domain = domain;
   }
-  fecth= async ():Promise<void> => {
-    const res =await fetch('/api/productAll',{
-       method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  fecth = async (): Promise<void> => {
+    const res = await fetch('/api/productAll', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
     console.log(`大項目:`);
-    
+
   };
   add = async () => {
-    try {
+          alert(this.userData);
 
-      const res = await fetch('/app/Information/api/productAll', {
+    try {
+      const res = await fetch('/api/productAll', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,12 +59,8 @@ class MajorCategory implements Category {
           id: this.id,
           hashcode: this.hashcode,
           domainUrl: this.domain,
-          header: "",
-          user: {
-            account: "loveaoe33",
-            toker: "",
-            level: 0,
-          }
+          header: this.header,
+          userData: this.userData,
         }),
       })
 
@@ -181,7 +180,7 @@ class MidCategory implements Category {
   constructor(domain: string) {
     this.domain = domain;
   }
-    fecth= ():void => {
+  fecth = (): void => {
     console.log(`大項目:`);
 
   };
@@ -319,7 +318,7 @@ class MinorCategory implements Category {
   constructor(domain: string) {
     this.domain = domain
   }
-   fecth= ():void => {
+  fecth = (): void => {
     console.log(`大項目:`);
 
   };
@@ -505,8 +504,8 @@ class MinorCategory implements Category {
 
 
 
-export function MajorCategory_Api(id: number, header: string, hashcode: string, domain: string): MajorCategory {
-  const Major = new MajorCategory(id, header, hashcode, domain);
+export function MajorCategory_Api(id: number, header: string, hashcode: string, domain: string,userData:string): MajorCategory {
+  const Major = new MajorCategory(id, header, hashcode, domain,userData);
   return Major;
 
 }

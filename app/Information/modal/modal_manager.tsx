@@ -10,32 +10,24 @@ interface LoginCheck {
     isOpen: boolean;
     account: string;
     jwtoken: string;
+    leve:number;
     title: string;
 }
-
-
-
-const modalView = ({ isClose, isOpen, title, account, jwtoken }: LoginCheck) => {
+const modalView = ({ isClose, isOpen, title, account, jwtoken,leve }: LoginCheck) => {
     const [domain, setDomain] = useState('http://localhost:8080');
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
     const [Minor, setMinor] = useState<string>("");
     const addMajorCategory = (): void => {
-        const api=api_Manager.MajorCategory_Api(0,MajorItem,"",domain);
-        api.fecth();
+        const api = api_Manager.MajorCategory_Api(0, MajorItem, "", domain,"1,loveaoe33,456,0");
+        api.add();
     }
-
-
     const addMidCategory = (): void => {
         alert(MajorItem);
-
-
     }
 
     const addMinorCategory = (): void => {
         alert(MajorItem);
-
-
     }
 
 

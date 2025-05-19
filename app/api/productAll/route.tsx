@@ -6,6 +6,7 @@ type RequestBody = {
   hashcode: string | undefined | null;
   domainUrl: string | undefined | null;
   header: string | undefined | null;
+  showbool:boolean| undefined | null;
   userData:string | undefined | null;
 }
 // GET Method
@@ -50,11 +51,43 @@ export async function POST(request: Request) {   //insert data
 
 }
 
+
+export async function DELETE(request: Request) { //delet data
+  const body = await request.json()
+  const { id, hashcode, domainUrl,userData }: RequestBody = body;
+  const response = await fetch(`${domainUrl}/Product_Imformation/deleteProduct_Information?caseSelect=marjorCase`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: id,
+      hashcode: hashcode,
+      userString: userData,
+
+    })
+  });
+  const data: any = response.json();
+  return NextResponse.json({ method: 'delete', data: data, message: '刪除成功' })
+}
+
+
 export async function STATE(request: Request) {   //update state
   const body = await request.json()
+    const { id, hashcode, domainUrl,userData,showbool }: RequestBody = body;
+    const response = await fetch(`${domainUrl}/Product_Imformation/updateProduct_State`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: id,
+      hashcode: hashcode,
+      showbool:showbool,
+       userString: userData,
+    })
+  });
   return NextResponse.json({ method: 'PUT', data: body, message: '更新資料成功' })
-
 }
+
+
+
 
 export async function PUT(request: Request) { //update data
   const body: string = await request.json()
@@ -62,17 +95,3 @@ export async function PUT(request: Request) { //update data
 }
 
 
-export async function DELETE(request: Request) { //delet data
-  const body = await request.json()
-  const { id, hashcode, domainUrl }: RequestBody = body;
-  const response = await fetch(`${domainUrl}/Product_Imformation/setProduct_Information`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      id: id,
-      hashcode: hashcode,
-    })
-  });
-  const data: any = response.json();
-  return NextResponse.json({ method: 'delete', data: data, message: '刪除成功' })
-}

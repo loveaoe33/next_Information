@@ -5,6 +5,8 @@ import "./css/information_main.css"
 import Template_Md from "./template_md";
 import ModalLogin from "./modal/modal_login";
 import ModalAdmin from "./modal/modal_manager";
+import * as api_Manager from "./lib/information_state";
+
 
 
 export default function main() {
@@ -38,23 +40,23 @@ export default function main() {
         title: string;
     }
 
-    const [routerMap, setRouterMap] = useState<Map<string, apiRouter>>(() => {    //api router state
-        const apiUrl_MD = new apiRouter("192.168.2.147", "3000", true, "Information", "getMD_Product");
-        const apiUrl_Xray = new apiRouter("192.168.2.147", "3000", true, "Information", "getXray_Product");
-        const apiUrl_Health = new apiRouter("192.168.2.147", "3000", true, "Information", "getHealth_Product");
-        const apiUrl_Reha = new apiRouter("192.168.2.147", "3000", true, "Information", "getReha_Product");
-        const apiUrl_Or = new apiRouter("192.168.2.147", "3000", true, "Information", "getOr_Product");
-        const apiUrl_Other = new apiRouter("192.168.2.147", "3000", true, "Information", "getOther_Product");
+    // const [routerMap, setRouterMap] = useState<Map<string, apiRouter>>(() => {    //api router state
+    //     const apiUrl_MD = new apiRouter("192.168.2.147", "3000", true, "Information", "getMD_Product");
+    //     const apiUrl_Xray = new apiRouter("192.168.2.147", "3000", true, "Information", "getXray_Product");
+    //     const apiUrl_Health = new apiRouter("192.168.2.147", "3000", true, "Information", "getHealth_Product");
+    //     const apiUrl_Reha = new apiRouter("192.168.2.147", "3000", true, "Information", "getReha_Product");
+    //     const apiUrl_Or = new apiRouter("192.168.2.147", "3000", true, "Information", "getOr_Product");
+    //     const apiUrl_Other = new apiRouter("192.168.2.147", "3000", true, "Information", "getOther_Product");
 
-        return new Map([
-            ['MD', apiUrl_MD],
-            ['Xray', apiUrl_Xray],
-            ['Health', apiUrl_Health],
-            ['Reha', apiUrl_Reha],
-            ['Or', apiUrl_Or],
-            ['Other', apiUrl_Other]
-        ]);
-    });
+    //     return new Map([
+    //         ['MD', apiUrl_MD],
+    //         ['Xray', apiUrl_Xray],
+    //         ['Health', apiUrl_Health],
+    //         ['Reha', apiUrl_Reha],
+    //         ['Or', apiUrl_Or],
+    //         ['Other', apiUrl_Other]
+    //     ]);
+    // });
 
     const [templateMap, setTemplateMap] = useState<Map<string, boolean>>(() => {     //template state
         return new Map([
@@ -64,12 +66,25 @@ export default function main() {
 
     });
 
+    const [domain, setDomain] = useState('http://localhost:8080');
+
+
+    const [headData, setHead] = useState<any[]>([]); //fetch Head
+
+
+    const [headKid, setKid] = useState<[]>([]);//fetch Kid
+
+
+    const [headTree, setTree] = useState<[]>([]);//fetch Tree
+
 
 
 
 
     useEffect(() => {  //when mount
         console.log("✅ useEffect - 组件初始化完成");
+        fetch_Information();
+        combine_Informatoin();
         return () => {
             console.log("❌ useEffect Cleanup");
         };
@@ -77,11 +92,35 @@ export default function main() {
     const [isOpenLogin, setLoginOpent] = useState<boolean>(false);
     const [isOpenAdmin, setAdminOpent] = useState<boolean>(false);
     const [loginAccount, setAccount] = useState("TEST");
-    const isCloseLogin = () => {
+    const isCloseLogin = (): void => {
         setLoginOpent(false);
     }
 
-    const isCloseAdmin = () => {
+
+
+    const fetch_Information = async (): Promise<void> => {
+        // const [head, ked, tree] = await Promise.all([
+        //     api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs(),
+        //     api_Manager.MidCategory_Api(0, "", "", domain, "").fetchs(),
+        //     api_Manager.MinorCategory_Api(0, "", "", domain, "").fetchs(),
+        // ])
+
+        const head:any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
+        const parsed=head.res.externalData.map(JSON.parse);  //Json string to Json
+        console.log(parsed);
+        
+        setHead(parsed);
+        console.log("main:"+headData);
+
+        //   setKid(ked);
+        //   setTree(tree);
+    }
+
+    const combine_Informatoin = (): void => {
+        fetch_Information();
+    }
+
+    const isCloseAdmin = (): void => {
         setAdminOpent(false);
     }
 

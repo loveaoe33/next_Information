@@ -5,15 +5,17 @@ import { useState } from "react"
 
 
 interface Category {
-  fecth: () => void;
-  add: (data: Category) => void;
-  delete: () => void;
+  fetchs: () => Promise<[]>;
+  add: (data: Category) => Promise<string>;
+  delete: () => Promise<string>;
   update: () => void;
-  hide: () => void;
-  shows: () => void;
+  hide: () => Promise<string>;
+  shows: () => Promise<string>;
   touch: () => void;
   toJSON: () => void;
 }
+
+
 
 
 
@@ -28,26 +30,27 @@ class MajorCategory implements Category {
   private create_name: string | undefined | null;
   private show: Boolean | undefined | null;
   private domain: string | undefined | null;
-  private userData:string| undefined | null;
-  constructor(id: number, header: string, hashcode: string, domain: string,userData:string) {
+  private userData: string | undefined | null;
+  constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
     this.id = id;
     this.header = header;
     this.hashcode = hashcode;
-    this.userData=userData;
+    this.userData = userData;
     this.domain = domain;
   }
-  fecth = async (): Promise<void> => {
-    const res = await fetch('/api/productAll', {
-      method: 'POST',
+  fetchs = async (): Promise<[]> => {
+    const query=new URLSearchParams({id:"123", domainUrl: this.domain??""}).toString();
+    const res = await fetch(`/api/productAll?${query}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     })
     console.log(`大項目:`);
-
+    return res.json();
   };
-  add = async () => {
-          alert(this.userData);
+  add = async (): Promise<string> => {
+    alert(this.userData);
 
     try {
       const res = await fetch('/api/productAll', {
@@ -66,32 +69,36 @@ class MajorCategory implements Category {
 
       if (!res.ok) throw new Error("MajorCategory add Error")
       const result = await res.json();
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
-
+      return "Server Insert none connetcion";
     }
   }
-  delete = async () => {
+  delete = async (): Promise<string> => {
 
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch('/api/productAll', {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          userData: this.userData,
         }),
       })
 
       if (!res.ok) throw new Error("MajorCategory delete Error")
       const result = await res.json();
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
-
+      return "Server Delete none connetcion";
     }
 
   }
@@ -114,31 +121,36 @@ class MajorCategory implements Category {
       if (!res.ok) throw new Error("MajorCategory hide Error")
       const result = await res.json();
       this.show = false;
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
-
+      return "Server Hide none connetcion";
     }
   }
   shows = async () => {
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch('/api/productAll', {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          userData: this.userData,
         }),
       })
 
       if (!res.ok) throw new Error("MajorCategory shows Error")
       const result = await res.json();
       this.show = true;
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
+      return "Server Show none connetcion";
 
     }
 
@@ -176,15 +188,30 @@ class MidCategory implements Category {
   private show: Boolean | undefined | null;
   private focus_number: number | undefined | null;
   private domain: string | undefined | null;
+  private userData: string | undefined | null;
 
-  constructor(domain: string) {
+
+  constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
+    this.id = id;
+    this.header = header;
+    this.hashcode = hashcode;
+    this.userData = userData;
     this.domain = domain;
   }
-  fecth = (): void => {
-    console.log(`大項目:`);
+
+
+  fetchs = async (): Promise<[]> => {
+    const res = await fetch('/api/productKid', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    console.log(`中項目:`);
+    return res.json();
 
   };
-  add = async (data: Category) => {
+  add = async (): Promise<string> => {
     try {
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -194,17 +221,19 @@ class MidCategory implements Category {
         body: JSON.stringify({
 
         }),
+
+
       })
 
       if (!res.ok) throw new Error("MidCategory add Error")
       const result = await res.json();
-      console.log(result);
+      return result.data;
     } catch (err) {
-      alert(err);
+      return "Server none connetcion";
     }
 
   }
-  delete = async () => {
+  delete = async (): Promise<string> => {
 
 
     try {
@@ -222,8 +251,11 @@ class MidCategory implements Category {
       if (!res.ok) throw new Error("MidCategory delete Error")
       const result = await res.json();
       console.log(result);
+      return result.data;
+
     } catch (err) {
       alert(err);
+      return "Server Delete none connetcion";
 
     }
 
@@ -247,9 +279,10 @@ class MidCategory implements Category {
       if (!res.ok) throw new Error("MidCategory hide Error")
       const result = await res.json();
       this.show = true;
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
+      return "Server Hide none connetcion";
 
     }
   }
@@ -269,9 +302,10 @@ class MidCategory implements Category {
       if (!res.ok) throw new Error("MidCategory shows Error")
       const result = await res.json();
       this.show = false;
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
+      return "Server Show none connetcion";
 
     }
 
@@ -315,16 +349,29 @@ class MinorCategory implements Category {
   private show: Boolean | undefined | null;
   private content_json: String | undefined | null;
   private domain: String | undefined | null;
-  constructor(domain: string) {
-    this.domain = domain
+  private userData: String | undefined | null;
+  constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
+    this.id = id;
+    this.header = header;
+    this.hashcode = hashcode;
+    this.userData = userData;
+    this.domain = domain;
   }
-  fecth = (): void => {
-    console.log(`大項目:`);
-
+  fetchs = async (): Promise<[]> => {
+    const res = await fetch('/api/productDetail', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    console.log(`小項目:`);
+    return res.json();
   };
 
 
-  add = async (data: Category) => {
+
+
+  add = async (data: Category): Promise<string> => {
     try {
       const res = await fetch(this.api_url, {
         method: 'POST',
@@ -338,14 +385,14 @@ class MinorCategory implements Category {
 
       if (!res.ok) throw new Error("MinorCategory add Error")
       const result = await res.json();
-      console.log(result);
+      return result.data;
     } catch (err) {
-      alert(err);
+      return "Server Insert none connetcion";
     }
 
 
   }
-  delete = async () => {
+  delete = async (): Promise<string> => {
     try {
 
       const res = await fetch(this.api_url, {
@@ -361,8 +408,10 @@ class MinorCategory implements Category {
       if (!res.ok) throw new Error("MinorCategory delete Error")
       const result = await res.json();
       console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
+      return "Server Delete none connetcion";
 
     }
 
@@ -404,9 +453,10 @@ class MinorCategory implements Category {
       if (!res.ok) throw new Error("MinorCategory hide Error")
       const result = await res.json();
       this.show = true;
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
+      return "Server Hide none connetcion";
 
     }
   }
@@ -426,9 +476,10 @@ class MinorCategory implements Category {
       if (!res.ok) throw new Error("MinorCategory shows Error")
       const result = await res.json();
       this.show = false;
-      console.log(result);
+      return result.data;
     } catch (err) {
       alert(err);
+      return "Server Show  none connetcion";
 
     }
 
@@ -504,21 +555,21 @@ class MinorCategory implements Category {
 
 
 
-export function MajorCategory_Api(id: number, header: string, hashcode: string, domain: string,userData:string): MajorCategory {
-  const Major = new MajorCategory(id, header, hashcode, domain,userData);
+export function MajorCategory_Api(id: number, header: string, hashcode: string, domain: string, userData: string): MajorCategory {
+  const Major = new MajorCategory(id, header, hashcode, domain, userData);
   return Major;
 
 }
 
-export function MidCategory_Api(domain: string): MidCategory {
-  const Kid = new MidCategory(domain);
+export function MidCategory_Api(id: number, header: string, hashcode: string, domain: string, userData: string): MidCategory {
+  const Kid = new MidCategory(id, header, hashcode, domain, userData);
   return Kid;
 
 }
 
 
-export function MinorCategory_Api(domain: string): MinorCategory {
-  const Minor = new MinorCategory(domain);
+export function MinorCategory_Api(id: number, header: string, hashcode: string, domain: string, userData: string): MinorCategory {
+  const Minor = new MinorCategory(id, header, hashcode, domain, userData);
   return Minor;
 
 

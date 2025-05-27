@@ -58,6 +58,9 @@ export default function main() {
     //     ]);
     // });
 
+
+    ;
+
     const [templateMap, setTemplateMap] = useState<Map<string, boolean>>(() => {     //template state
         return new Map([
             ['template_Md', false],
@@ -69,7 +72,7 @@ export default function main() {
     const [domain, setDomain] = useState('http://localhost:8080');
 
 
-    const [headData, setHead] = useState<any[]>([]); //fetch Head
+    const [headData, setHead] = useState<any[] | null>([]); //fetch Head
 
 
     const [headKid, setKid] = useState<[]>([]);//fetch Kid
@@ -82,13 +85,23 @@ export default function main() {
 
 
     useEffect(() => {  //when mount
-        console.log("✅ useEffect - 组件初始化完成");
+        console.log("✅ useEffect - 元件初始化完成");
         fetch_Information();
         combine_Informatoin();
         return () => {
             console.log("❌ useEffect Cleanup");
         };
     }, [])
+
+
+    // 正確寫法（監聽變化）
+    useEffect(() => {
+        if (headData) {
+            console.log("新資料:", headData);
+            // 這裡處理接下來要做的事
+        }
+    }, [headData])
+
     const [isOpenLogin, setLoginOpent] = useState<boolean>(false);
     const [isOpenAdmin, setAdminOpent] = useState<boolean>(false);
     const [loginAccount, setAccount] = useState("TEST");
@@ -105,12 +118,12 @@ export default function main() {
         //     api_Manager.MinorCategory_Api(0, "", "", domain, "").fetchs(),
         // ])
 
-        const head:any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
-        const parsed=head.res.externalData.map(JSON.parse);  //Json string to Json
-        console.log(parsed);
-        
+        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
+        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
+        console.log("哈哈" + head.res.externalData);
+        console.log("哈" + parsed[0].kid_header);
+
         setHead(parsed);
-        console.log("main:"+headData);
 
         //   setKid(ked);
         //   setTree(tree);
@@ -222,7 +235,7 @@ export default function main() {
                         <span className="span-account">用戶資訊:</span>
                         <button className="main-login-btn" onClick={() => setLoginOpent(true)}>登入</button>
                     </div>
-                    {templateMap.get("template_Admin") ? <ModalAdmin isClose={isCloseAdmin} isOpen={isOpenAdmin} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
+                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin}  isOpen={isOpenAdmin} headerData={headData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
                     <ModalLogin isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />
                 </div>
 

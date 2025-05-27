@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import "./css/information_template.css"
 import ModalView  from "./modal/modal_product";

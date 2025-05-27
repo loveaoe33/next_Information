@@ -21,7 +21,7 @@ interface Category {
 
 class MajorCategory implements Category {
   private api_url: string = "";
-  private id: number | undefined | null;;
+  private id: number | undefined | null;
   private header: string | undefined | null;
   private kid_header: string | undefined | null;
   private tree_header: string | undefined | null;

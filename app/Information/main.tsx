@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./css/information_main.css"
 import Template_Md from "./template_md";
 import ModalLogin from "./modal/modal_login";
 import ModalAdmin from "./modal/modal_manager";
 import * as api_Manager from "./lib/information_state";
+import isEqual from 'lodash/isEqual';
 
 
 
@@ -75,12 +76,13 @@ export default function main() {
     const [headData, setHead] = useState<any[] | null>([]); //fetch Head
 
 
-    const [headKid, setKid] = useState<[]>([]);//fetch Kid
+    const [kidData, setKid] = useState<[]>([]);//fetch Kid
 
 
-    const [headTree, setTree] = useState<[]>([]);//fetch Tree
+    const [treeData, setTree] = useState<[]>([]);//fetch Tree
 
-
+    // 儲存上一輪的資料
+    const prevRef = useRef({ headData, kidData, treeData });
 
 
 
@@ -92,15 +94,17 @@ export default function main() {
             console.log("❌ useEffect Cleanup");
         };
     }, [])
-
-
     // 正確寫法（監聽變化）
     useEffect(() => {
-        if (headData) {
-            console.log("新資料:", headData);
-            // 這裡處理接下來要做的事
+        const current = { headData, kidData, treeData };
+        if (!isEqual(prevRef.current, current)) {
+            prevRef.current = current;
+            console.log("資料有更新");
+        } else {
+            console.log("資料無更新");
+
         }
-    }, [headData])
+    }, [headData, kidData, treeData])
 
     const [isOpenLogin, setLoginOpent] = useState<boolean>(false);
     const [isOpenAdmin, setAdminOpent] = useState<boolean>(false);
@@ -235,7 +239,7 @@ export default function main() {
                         <span className="span-account">用戶資訊:</span>
                         <button className="main-login-btn" onClick={() => setLoginOpent(true)}>登入</button>
                     </div>
-                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin}  isOpen={isOpenAdmin} headerData={headData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
+                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
                     <ModalLogin isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />
                 </div>
 

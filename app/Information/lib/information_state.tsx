@@ -4,7 +4,7 @@ import { useState } from "react"
 
 
 
-interface Category {
+export interface Category {
   fetchs: () => Promise<[]>;
   add: (data: Category) => Promise<string>;
   delete: () => Promise<string>;
@@ -19,7 +19,7 @@ interface Category {
 
 
 
-class MajorCategory implements Category {
+export  class MajorCategory implements Category {
   private api_url: string = "";
   private id: number | undefined | null;
   private header: string | undefined | null;
@@ -50,8 +50,6 @@ class MajorCategory implements Category {
     return res.json();
   };
   add = async (): Promise<string> => {
-    alert(this.userData);
-
     try {
       const res = await fetch('/api/productAll', {
         method: 'POST',
@@ -66,12 +64,11 @@ class MajorCategory implements Category {
           userData: this.userData,
         }),
       })
-
-      if (!res.ok) throw new Error("MajorCategory add Error")
       const result = await res.json();
-      return result.data;
+      if (!res.ok) throw new Error("MajorCategory add Error")
+      return result.res;
     } catch (err) {
-      alert(err);
+  
       return "Server Insert none connetcion";
     }
   }
@@ -175,7 +172,7 @@ class MajorCategory implements Category {
 
 }
 
-class MidCategory implements Category {
+export  class MidCategory implements Category {
   private api_url = "";
 
   private id: number | undefined | null;;
@@ -334,7 +331,7 @@ class MidCategory implements Category {
 
 
 
-class MinorCategory implements Category {
+export  class MinorCategory implements Category {
   private api_url = "";
   private id: number | undefined | null;;
   private header: String | undefined | null;

@@ -54,10 +54,10 @@ export async function POST(request: Request) {   //insert data
         userString: userData,
       })
     });
-    if (!response.ok) throw new Error('Insert API失敗了')
-    const data: any = await response.json();
+    const data: any = await response.text();
     // return NextResponse.json(data, { status: 201 });
-    return NextResponse.json({ method: 'POST', sucess: true, message: '新增資料成功', res: data.res })
+    if (!response.ok) throw new Error('Insert API失敗了')
+    return NextResponse.json({ method: 'POST', sucess: true, message: '新增資料成功', res: data })
 
   } catch (error) {
     return NextResponse.json(

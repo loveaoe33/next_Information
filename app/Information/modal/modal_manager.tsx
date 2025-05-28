@@ -4,103 +4,126 @@ import "../css/information_manager.css";
 import { useState } from "react";
 import * as api_Manager from "../lib/information_state";
 import { ToastContainer, toast } from 'react-toastify';
+import React from "react";
+
 
 
 // 修正拼寫為 ModalViewProps，並添加 children（可選）
 interface LoginCheck {
     isClose: () => void;
+    fetch_Information: () => void;
     isOpen: boolean;
     account: string;
     jwtoken: string;
     leve: number;
     title: string;
     headerData: any[] | undefined | null;
+    kidData: any[] | undefined | null;
+    treeData: any[] | undefined | null;
 }
-const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve }: LoginCheck) => {
+const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, account, jwtoken, leve }: LoginCheck) => {
     const [domain, setDomain] = useState('http://localhost:8080');
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
     const [Minor, setMinor] = useState<string>("");
 
-    const errorAlert = (message: string): void => void toast.error(message, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-    });
+    const errorAlert = (message: string): void => {
+        toast.error(message, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    };
 
 
-    const sucessAlert = (message: string): void => void toast.success(message, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-    });
+    const successAlert = (message: string): void => {
+        toast.success(message, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    };
 
     const addMajorCategory = async (): Promise<void> => {
-        const api = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe44,456,0");
-        const log = await api.add();
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+        const log: string = await api.add();
+        if (MajorItem === "") {
+            errorAlert("不可為空白!")
+        } else {
+            switch (log) {
+                case "Server Insert none connetcion":
+                    alert("新增API伺服器異常或者資料重複");
+                    break;
+                case "sucess":
+                    successAlert("新增成功!")
+                    setMajor("");
+                    fetch_Information();
+                    break;
+                case "fail":
+                    alert("新增失敗，請聯繫專員!")
+                    break;
+            }
 
-        switch (log) {
-            case "Server Insert none connetcion":
-                alert("新增API伺服器異常");
-
-            case "sucess":
-                alert("新增成功!")
-
-            case "fail":
-                alert("新增失敗，請聯繫專員!")
         }
+
     }
     const deleteMajorCategory = async (): Promise<void> => {
-        const api = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = await api.delete();
         switch (log) {
             case "Server Delete none connetcion":
                 alert("刪除API伺服器異常");
-
+                break;
             case "sucess":
                 alert("刪除成功!")
-
+                break;
             case "fail":
                 alert("刪除失敗，請聯繫專員!")
+                break;
         }
     }
 
     const stateMajorCategoty = async (caseSelect: string): Promise<void> => {
-        const api = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = (caseSelect === "Show") ? await api.shows() : await api.hide();
         switch (log) {
             case "Server Hide none connetcion":
                 alert("隱藏API伺服器異常");
+                break;
             case "Server Show none connetcion":
                 alert("顯現API伺服器異常");
+                break;
             case "sucess":
-                alert("狀態更新成功!")
+                alert("狀態更新成功!");
+                break;
             case "fail":
-                alert("狀態更新失敗，請聯繫專員!")
+                alert("狀態更新失敗，請聯繫專員!");
+                break;
         }
 
     }
     const addMidCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe44,456,0");
+        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = await api.add();
 
         switch (log) {
             case "Server Insert none connetcion":
                 alert("新增API伺服器異常");
-
+                break;
             case "sucess":
-                alert("新增成功!")
-
+                alert("新增成功!");
+                break;
             case "fail":
-                alert("新增失敗，請聯繫專員!")
+                alert("新增失敗，請聯繫專員!");
+                break
         }
     }
 
@@ -110,12 +133,13 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
         switch (log) {
             case "Server Delete none connetcion":
                 alert("刪除API伺服器異常");
-
+                break;
             case "sucess":
-                alert("刪除成功!")
-
+                alert("刪除成功!");
+                break;
             case "fail":
-                alert("刪除失敗，請聯繫專員!")
+                alert("刪除失敗，請聯繫專員!");
+                break;
         }
     }
 
@@ -127,12 +151,16 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
         switch (log) {
             case "Server Hide none connetcion":
                 alert("隱藏API伺服器異常");
+                break;
             case "Server Show none connetcion":
                 alert("顯現API伺服器異常");
+                break;
             case "sucess":
-                alert("狀態更新成功!")
+                alert("狀態更新成功!");
+                break;
             case "fail":
-                alert("狀態更新失敗，請聯繫專員!")
+                alert("狀態更新失敗，請聯繫專員!");
+                break;
         }
     }
 
@@ -140,18 +168,19 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
 
 
     const addMinorCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe44,456,0");
+        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = await api.add();
 
         switch (log) {
             case "Server Insert none connetcion":
                 alert("新增API伺服器異常");
-
+                break;
             case "sucess":
-                alert("新增成功!")
-
+                alert("新增成功!");
+                break;
             case "fail":
-                alert("新增失敗，請聯繫專員!")
+                alert("新增失敗，請聯繫專員!");
+                break;
         }
     }
 
@@ -161,12 +190,13 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
         switch (log) {
             case "Server Delete none connetcion":
                 alert("刪除API伺服器異常");
-
+                break;
             case "sucess":
-                alert("刪除成功!")
-
+                alert("刪除成功!");
+                break;
             case "fail":
-                alert("刪除失敗，請聯繫專員!")
+                alert("刪除失敗，請聯繫專員!");
+                break;
         }
     }
 
@@ -178,12 +208,16 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
         switch (log) {
             case "Server Hide none connetcion":
                 alert("隱藏API伺服器異常");
+                break;
             case "Server Show none connetcion":
                 alert("顯現API伺服器異常");
+                break;
             case "sucess":
-                alert("狀態更新成功!")
+                alert("狀態更新成功!");
+                break;
             case "fail":
-                alert("狀態更新失敗，請聯繫專員!")
+                alert("狀態更新失敗，請聯繫專員!");
+                break;
         }
     }
 
@@ -216,7 +250,7 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
                     <h2>大項類別管理</h2>
                     <div className="input-group">
                         <input type="text" id="majorInput" value={MajorItem} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)} placeholder="輸入大項類別" />
-                        <button className="addMajor" onClick={() => stateMajorCategoty("Show")}>新增大項目</button>
+                        <button className="addMajor" onClick={() => addMajorCategory()}>新增大項目</button>
                     </div>
                     <div className="category-list" id="majorList"></div>
                     <div className="deatail-container">
@@ -300,7 +334,7 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
 
                             {headerData?.map((item, index) => (
                                 (item.showbool) ? <li className="category-item">
-                                    <span className="category-name">類項4111</span>
+                                    <span className="category-name">顯示類測試</span>
                                     <div className="actions">
                                         <button className="category-toggle-hide-btn">👁️‍🗨️</button>
                                         <button className="category-delete-btn">🗑️</button>
@@ -322,20 +356,17 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
 
                         </div>
                         <ul id="categoryList">
-                            <li className="category-item">
-                                <span className="category-name">類項 1</span>
-                                <div className="actions">
-                                    <button className="category-toggle-view-btn">👁️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
-                            <li className="category-item">
-                                <span className="category-name">類項 2</span>
-                                <div className="actions">
-                                    <button className="category-toggle-view-btn">👁️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
+                            {headerData?.map((item, index) => (
+                                (!item.showbool) ? <li className="category-item">
+                                    <span className="category-name">隱藏類測試</span>
+                                    <div className="actions">
+                                        <button className="category-toggle-show-btn">👁️‍🗨️</button>
+                                        <button className="category-delete-btn">🗑️</button>
+                                    </div>
+                                </li> : ""
+
+
+                            ))}
                         </ul>
 
                     </div>
@@ -411,6 +442,7 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
                 </div>
             </div>
         </div>
+        <ToastContainer />
     </Modal>
     );
 
@@ -418,4 +450,4 @@ const modalView = ({ isClose, isOpen, headerData, title, account, jwtoken, leve 
 }
 
 
-export default modalView;
+export default React.memo(modalView);

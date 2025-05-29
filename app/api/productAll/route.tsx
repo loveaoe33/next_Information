@@ -48,13 +48,14 @@ export async function POST(request: Request) {   //insert data
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        type: "Head",
         id: id,
         hashcode: hashcode,
         header: header,
         userString: userData,
       })
     });
-    const data: any = await response.text();
+    const data: string = await response.text();
     // return NextResponse.json(data, { status: 201 });
     if (!response.ok) throw new Error('Insert API失敗了')
     return NextResponse.json({ method: 'POST', sucess: true, message: '新增資料成功', res: data })
@@ -80,6 +81,7 @@ export async function DELETE(request: Request) { //delet data
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        type: "Head",
         id: id,
         hashcode: hashcode,
         userString: userData,
@@ -87,8 +89,8 @@ export async function DELETE(request: Request) { //delet data
       })
     });
     if (!response.ok) throw new Error('Delete API失敗了')
-    const data: any = response.json();
-    return NextResponse.json({ method: 'DELETE', sucess: true, message: '刪除成功', res: data.res })
+    const data: string = await response.text();
+    return NextResponse.json({ method: 'DELETE', sucess: true, message: '刪除成功', res: data })
 
   } catch (error) {
 
@@ -112,16 +114,17 @@ export async function PATCH(request: Request) {   //update state
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        type: "Head",
         id: id,
         hashcode: hashcode,
-        showbool: showbool,
+        showbool:showbool,
         userString: userData,
       })
 
     });
     if (!response.ok) throw new Error('PATCH API失敗了')
-    const data: any = response.json();
-    return NextResponse.json({ method: 'PATCH', sucess: true, message: '更新資料成功', res: data.res })
+    const data: string = await response.text();
+    return NextResponse.json({ method: 'PATCH', sucess: true, message: '更新資料成功', res: data })
 
 
   } catch (error) {

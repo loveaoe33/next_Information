@@ -1,7 +1,7 @@
 "use client";
 import Modal from "react-modal";
 import "../css/information_manager.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import * as api_Manager from "../lib/information_state";
 import { ToastContainer, toast } from 'react-toastify';
 import React from "react";
@@ -11,7 +11,7 @@ import React from "react";
 // 修正拼寫為 ModalViewProps，並添加 children（可選）
 interface LoginCheck {
     isClose: () => void;
-    fetch_Information: () => void;
+    fetch_Information: (caseSelect: string) => Promise<void>;
     isOpen: boolean;
     account: string;
     jwtoken: string;
@@ -26,6 +26,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
     const [Minor, setMinor] = useState<string>("");
+    const headSelectRef = useRef<HTMLSelectElement>(null);
 
     const errorAlert = (message: string): void => {
         toast.error(message, {
@@ -53,82 +54,102 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
     };
 
     const addMajorCategory = async (): Promise<void> => {
-        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
-        const log: string = await api.add();
         if (MajorItem === "") {
             errorAlert("不可為空白!")
         } else {
+            const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+            const log: string = await api.add();
             switch (log) {
+
                 case "Server Insert none connetcion":
-                    alert("新增API伺服器異常或者資料重複");
+                    errorAlert("新增API伺服器異常!")
                     break;
                 case "sucess":
                     successAlert("新增成功!")
                     setMajor("");
-                    fetch_Information();
+                    fetch_Information("headCase");
                     break;
                 case "fail":
-                    alert("新增失敗，請聯繫專員!")
+                    errorAlert("新增失敗，請聯繫專員!")
+                    break;
+                case "Account has no permissions":
+                    errorAlert("權限錯誤，請聯繫專員!");
+            }
+
+        }
+
+    }
+    const deleteMajorCategory = async (hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(Number(event.currentTarget.id), MajorItem, hashCode, domain, "1,loveaoe33,456,0");
+        const log = await api.delete();
+        switch (log) {
+            case "Server Delete none connetcion":
+                errorAlert("刪除API伺服器異常");
+                break;
+            case "sucess":
+                successAlert("刪除成功!")
+                fetch_Information("headCase");
+                break;
+            case "fail":
+                errorAlert("刪除失敗，請聯繫專員!")
+                break;
+            case "Account has no permissions":
+                errorAlert("權限錯誤，請聯繫專員!");
+        }
+    }
+
+    const stateMajorCategoty = async (caseSelect: string, hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(Number(event.currentTarget.id), MajorItem, hashCode, domain, "1,loveaoe33,4556,0");
+        const log = (caseSelect === "show") ? await api.shows() : await api.hide();
+        switch (log) {
+            case "Server Hide none connetcion":
+                errorAlert("隱藏API伺服器異常");
+                break;
+            case "Server Show none connetcion":
+                errorAlert("顯現API伺服器異常");
+                break;
+            case "sucess":
+                successAlert("狀態更新成功!");
+                fetch_Information("headCase");
+                break;
+            case "fail":
+                errorAlert("狀態更新失敗，請聯繫專員!");
+                break;
+            case "Account has no permissions":
+                errorAlert("權限錯誤，請聯繫專員!");
+                break;
+
+        }
+
+    }
+    const addMidCategory = async (): Promise<void> => {
+
+        if (MidItem === "" || headSelectRef.current?.value === "") {
+            errorAlert("不可為空白!")
+        } else {
+            const api = api_Manager.MidCategory_Api(0, headSelectRef.current?.value, MidItem, "", domain, "1,loveaoe33,456,0");
+            const log = await api.add();
+            switch (log) {
+                case "Server Insert none connetcion":
+                    errorAlert("新增API伺服器異常");
+                    break;
+                case "sucess":
+                    successAlert("新增成功!");
+                    break;
+                case "fail":
+                    errorAlert("新增失敗，請聯繫專員!");
+                    break;
+                case "Account has no permissions":
+                    errorAlert("權限錯誤，請聯繫專員!");
                     break;
             }
 
         }
 
     }
-    const deleteMajorCategory = async (): Promise<void> => {
-        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
-        const log = await api.delete();
-        switch (log) {
-            case "Server Delete none connetcion":
-                alert("刪除API伺服器異常");
-                break;
-            case "sucess":
-                alert("刪除成功!")
-                break;
-            case "fail":
-                alert("刪除失敗，請聯繫專員!")
-                break;
-        }
-    }
-
-    const stateMajorCategoty = async (caseSelect: string): Promise<void> => {
-        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
-        const log = (caseSelect === "Show") ? await api.shows() : await api.hide();
-        switch (log) {
-            case "Server Hide none connetcion":
-                alert("隱藏API伺服器異常");
-                break;
-            case "Server Show none connetcion":
-                alert("顯現API伺服器異常");
-                break;
-            case "sucess":
-                alert("狀態更新成功!");
-                break;
-            case "fail":
-                alert("狀態更新失敗，請聯繫專員!");
-                break;
-        }
-
-    }
-    const addMidCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
-        const log = await api.add();
-
-        switch (log) {
-            case "Server Insert none connetcion":
-                alert("新增API伺服器異常");
-                break;
-            case "sucess":
-                alert("新增成功!");
-                break;
-            case "fail":
-                alert("新增失敗，請聯繫專員!");
-                break
-        }
-    }
 
     const deleteMidCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+        const api = api_Manager.MidCategory_Api(0, "", MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = await api.delete();
         switch (log) {
             case "Server Delete none connetcion":
@@ -146,7 +167,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
 
 
     const stateMidCategoty = async (caseSelect: string): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+        const api = api_Manager.MidCategory_Api(0, "", MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = (caseSelect === "Show") ? await api.shows() : await api.hide();
         switch (log) {
             case "Server Hide none connetcion":
@@ -168,7 +189,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
 
 
     const addMinorCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+        const api = api_Manager.MidCategory_Api(0, "", MajorItem, "", domain, "1,loveaoe33,456,0");
         const log = await api.add();
 
         switch (log) {
@@ -184,8 +205,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
         }
     }
 
-    const deleteMinorCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+    const deleteMinorCategory = async (hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+        alert("code" + hashCode + "id" + event.currentTarget.id);
+        const api = api_Manager.MidCategory_Api(Number(event.currentTarget.id), "", MajorItem, hashCode, domain, "1,loveaoe33,456,0");
         const log = await api.delete();
         switch (log) {
             case "Server Delete none connetcion":
@@ -202,9 +224,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
 
 
 
-    const stateMinorCategoty = async (caseSelect: string): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
-        const log = (caseSelect === "Show") ? await api.shows() : await api.hide();
+    const stateMinorCategoty = async (caseSelect: string, hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+        const api = api_Manager.MidCategory_Api(0, "", MajorItem, "", domain, "1,loveaoe33,4556,0");
+        const log = (caseSelect === "show") ? await api.shows() : await api.hide();
         switch (log) {
             case "Server Hide none connetcion":
                 alert("隱藏API伺服器異常");
@@ -249,8 +271,8 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
                 <div className="category-section">
                     <h2>大項類別管理</h2>
                     <div className="input-group">
-                        <input type="text" id="majorInput" value={MajorItem} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)} placeholder="輸入大項類別" />
-                        <button className="addMajor" onClick={() => addMajorCategory()}>新增大項目</button>
+                        <input type="text" id="majorInput" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMajor(e.target.value)} placeholder="輸入大項類別" />
+                        <button className="addMajor" onClick={addMajorCategory}>新增大項目</button>
                     </div>
                     <div className="category-list" id="majorList"></div>
                     <div className="deatail-container">
@@ -263,10 +285,10 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
 
                             {headerData?.map((item, index) => (
                                 (item.showbool) ? <li className="category-item">
-                                    <span className="category-name">類項4111</span>
+                                    <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button className="category-toggle-hide-btn">👁️‍🗨️</button>
-                                        <button className="category-delete-btn">🗑️</button>
+                                        <button id={item.id} onClick={(e) => stateMajorCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️‍🗨️隱藏</button>
+                                        <button id={item.id} onClick={(e) => deleteMajorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
                                 </li> : ""
 
@@ -286,20 +308,19 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
 
                         </div>
                         <ul id="categoryList">
-                            <li className="category-item">
-                                <span className="category-name">類項 1</span>
-                                <div className="actions">
-                                    <button className="category-toggle-view-btn">👁️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
-                            <li className="category-item">
-                                <span className="category-name">類項 2</span>
-                                <div className="actions">
-                                    <button className="category-toggle-view-btn">👁️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
+
+                            {headerData?.map((item, index) => (
+                                (!item.showbool) ? <li className="category-item">
+                                    <span className="category-name">{item.header}</span>
+                                    <div className="actions">
+                                        <button id={item.id} onClick={(e) => stateMajorCategoty("show", item.hashcode, e)} className="category-toggle-view-btn">👁️顯示</button>
+                                        <button id={item.id} onClick={(e) => deleteMajorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
+                                    </div>
+                                </li> : ""
+
+
+                            ))}
+
                         </ul>
 
                     </div>
@@ -309,8 +330,8 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, title, acco
                 <div className="category-section">
                     <h2>中項類別管理</h2>
                     <div className="input-group">
-                        <select id="majorSelect">{headerData?.map((item, index) => (<option key={index} value={item.id}>{item.header}</option>))}</select>
-                        <input type="text" id="midInput" placeholder="輸入中項類別" />
+                        <select id="midSelect" ref={headSelectRef}>{headerData?.map((item, index) => (<option key={index} value={item.hashcode}>{item.header}</option>))}</select>
+                        <input type="text" id="midInput" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMid(e.target.value)} placeholder="輸入中項類別" />
                         <button className="addMajor" onClick={addMidCategory}>新增中項目</button>
 
                     </div>

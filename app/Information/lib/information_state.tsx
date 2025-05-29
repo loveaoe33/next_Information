@@ -19,12 +19,10 @@ export interface Category {
 
 
 
-export  class MajorCategory implements Category {
+export class MajorCategory implements Category {
   private api_url: string = "";
   private id: number | undefined | null;
   private header: string | undefined | null;
-  private kid_header: string | undefined | null;
-  private tree_header: string | undefined | null;
   private hashcode: string | undefined | null;
   private create_date: string | undefined | null;
   private create_name: string | undefined | null;
@@ -39,7 +37,7 @@ export  class MajorCategory implements Category {
     this.domain = domain;
   }
   fetchs = async (): Promise<[]> => {
-    const query=new URLSearchParams({id:"123", domainUrl: this.domain??""}).toString();
+    const query = new URLSearchParams({ id: "123", domainUrl: this.domain ?? "" }).toString();
     const res = await fetch(`/api/productAll?${query}`, {
       method: 'GET',
       headers: {
@@ -68,7 +66,7 @@ export  class MajorCategory implements Category {
       if (!res.ok) throw new Error("MajorCategory add Error")
       return result.res;
     } catch (err) {
-  
+
       return "Server Insert none connetcion";
     }
   }
@@ -92,7 +90,7 @@ export  class MajorCategory implements Category {
 
       if (!res.ok) throw new Error("MajorCategory delete Error")
       const result = await res.json();
-      return result.data;
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Delete none connetcion";
@@ -105,28 +103,6 @@ export  class MajorCategory implements Category {
   hide = async () => {
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-
-        }),
-      })
-
-      if (!res.ok) throw new Error("MajorCategory hide Error")
-      const result = await res.json();
-      this.show = false;
-      return result.data;
-    } catch (err) {
-      alert(err);
-      return "Server Hide none connetcion";
-    }
-  }
-  shows = async () => {
-    try {
-
       const res = await fetch('/api/productAll', {
         method: 'PATCH',
         headers: {
@@ -137,6 +113,33 @@ export  class MajorCategory implements Category {
           hashcode: this.hashcode,
           domainUrl: this.domain,
           header: this.header,
+          showbool: false,
+          userData: this.userData,
+        }),
+      })
+
+      if (!res.ok) throw new Error("MajorCategory hide Error")
+      const result = await res.json();
+      this.show = false;
+      return result.res;
+    } catch (err) {
+      return "Server Hide none connetcion";
+    }
+  }
+  shows = async () => {
+    try {
+
+   const res = await fetch('/api/productAll', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          showbool: true,
           userData: this.userData,
         }),
       })
@@ -144,7 +147,7 @@ export  class MajorCategory implements Category {
       if (!res.ok) throw new Error("MajorCategory shows Error")
       const result = await res.json();
       this.show = true;
-      return result.data;
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Show none connetcion";
@@ -163,8 +166,6 @@ export  class MajorCategory implements Category {
     return {
       id: this.id,
       header: this.header,
-      kid_header: this.kid_header,
-      tree_header: this.tree_header,
       hashcode: this.hashcode,
     }
 
@@ -172,12 +173,11 @@ export  class MajorCategory implements Category {
 
 }
 
-export  class MidCategory implements Category {
+export class MidCategory implements Category {
   private api_url = "";
 
   private id: number | undefined | null;;
   private header: String | undefined | null;
-  private kid_header: String | undefined | null;
   private father_header: String | undefined | null;
   private hashcode: String | undefined | null;
   private create_date: String | undefined | null;
@@ -188,9 +188,10 @@ export  class MidCategory implements Category {
   private userData: string | undefined | null;
 
 
-  constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
+  constructor(id: number,headHashCode:string| undefined | null ,header: string, hashcode: string, domain: string, userData: string) {
     this.id = id;
     this.header = header;
+    this.father_header=headHashCode;
     this.hashcode = hashcode;
     this.userData = userData;
     this.domain = domain;
@@ -210,13 +211,18 @@ export  class MidCategory implements Category {
   };
   add = async (): Promise<string> => {
     try {
-      const res = await fetch(this.api_url, {
+      const res = await fetch("/api/productKid", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          father_header:this.father_header,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          userData: this.userData,
         }),
 
 
@@ -224,9 +230,10 @@ export  class MidCategory implements Category {
 
       if (!res.ok) throw new Error("MidCategory add Error")
       const result = await res.json();
-      return result.data;
+
+      return result.res;
     } catch (err) {
-      return "Server none connetcion";
+      return "Server Insert none connetcion";
     }
 
   }
@@ -318,7 +325,6 @@ export  class MidCategory implements Category {
     return {
       id: this.id,
       header: this.header,
-      kid_header: this.kid_header,
       father_header: this.father_header,
       hashcode: this.hashcode,
       create_date: this.create_date,
@@ -331,7 +337,7 @@ export  class MidCategory implements Category {
 
 
 
-export  class MinorCategory implements Category {
+export class MinorCategory implements Category {
   private api_url = "";
   private id: number | undefined | null;;
   private header: String | undefined | null;
@@ -558,8 +564,8 @@ export function MajorCategory_Api(id: number, header: string, hashcode: string, 
 
 }
 
-export function MidCategory_Api(id: number, header: string, hashcode: string, domain: string, userData: string): MidCategory {
-  const Kid = new MidCategory(id, header, hashcode, domain, userData);
+export function MidCategory_Api(id: number,headHashCode:string| undefined| null ,header: string, hashcode: string, domain: string, userData: string): MidCategory {
+  const Kid = new MidCategory(id,headHashCode, header, hashcode, domain, userData);
   return Kid;
 
 }

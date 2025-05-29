@@ -88,8 +88,7 @@ export default function main() {
 
     useEffect(() => {  //when mount
         console.log("✅ useEffect - 元件初始化完成");
-        fetch_Information();
-        combine_Informatoin();
+        fetch_Information("all");
         return () => {
             console.log("❌ useEffect Cleanup");
         };
@@ -113,28 +112,52 @@ export default function main() {
         setLoginOpent(false);
     }
 
+    const fetch_headInformation = async (): Promise<void> => {
+        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
+        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
+        setHead(parsed);
 
+    }
 
-    const fetch_Information = async (): Promise<void> => {
+    const fetch_kidInformation = async (): Promise<void> => {
+        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
+        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
+        setHead(parsed);
+
+    }
+
+    const fetch_treeInformation = async (): Promise<void> => {
+        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
+        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
+        setHead(parsed);
+
+    }
+
+    const fetch_Information = async (caseSelect: string): Promise<void> => {
         // const [head, ked, tree] = await Promise.all([
         //     api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs(),
         //     api_Manager.MidCategory_Api(0, "", "", domain, "").fetchs(),
         //     api_Manager.MinorCategory_Api(0, "", "", domain, "").fetchs(),
         // ])
 
-        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
-        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
-        console.log("哈哈" + head.res.externalData);
-        console.log("哈" + parsed[0].kid_header);
+        switch (caseSelect) {
+            case "headCase":
+                fetch_headInformation();
+                break;
+            case "kidCase":
+                break;
+            case "treeCase":
+            case "all":
+                await Promise.all([fetch_headInformation(),fetch_kidInformation(),fetch_treeInformation()]);
+                break;
+        }
 
-        setHead(parsed);
 
         //   setKid(ked);
         //   setTree(tree);
     }
 
     const combine_Informatoin = (): void => {
-        fetch_Information();
     }
 
     const isCloseAdmin = (): void => {

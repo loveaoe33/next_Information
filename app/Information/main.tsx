@@ -76,7 +76,7 @@ export default function main() {
     const [headData, setHead] = useState<any[] | null>([]); //fetch Head
 
 
-    const [kidData, setKid] = useState<[]>([]);//fetch Kid
+    const [kidData, setKid] = useState<any[] | null>([]);//fetch Kid
 
 
     const [treeData, setTree] = useState<[]>([]);//fetch Tree
@@ -120,9 +120,9 @@ export default function main() {
     }
 
     const fetch_kidInformation = async (): Promise<void> => {
-        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
-        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
-        setHead(parsed);
+        const kid: any = await api_Manager.MidCategory_Api(0,"", "", "", domain, "").fetchs();
+        const parsed = kid.res.externalData.map(JSON.parse);  //Json string to Json
+        setKid(parsed);
 
     }
 
@@ -145,13 +145,15 @@ export default function main() {
                 fetch_headInformation();
                 break;
             case "kidCase":
+                fetch_kidInformation();
                 break;
             case "treeCase":
+                fetch_treeInformation();
             case "all":
                 await Promise.all([fetch_headInformation(),fetch_kidInformation(),fetch_treeInformation()]);
                 break;
         }
-
+           console.log("中項目"+kidData);
 
         //   setKid(ked);
         //   setTree(tree);

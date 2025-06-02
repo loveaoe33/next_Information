@@ -199,7 +199,9 @@ export class MidCategory implements Category {
 
 
   fetchs = async (): Promise<[]> => {
-    const res = await fetch('/api/productKid', {
+
+    const query = new URLSearchParams({ id: "123", domainUrl: this.domain ?? "" }).toString();
+    const res = await fetch(`/api/productKid?${query}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -242,25 +244,27 @@ export class MidCategory implements Category {
 
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch("/api/productKid", {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          father:this.father_header,
+          userData: this.userData,
         }),
       })
 
       if (!res.ok) throw new Error("MidCategory delete Error")
       const result = await res.json();
-      console.log(result);
-      return result.data;
-
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Delete none connetcion";
-
     }
 
   }
@@ -270,20 +274,25 @@ export class MidCategory implements Category {
   hide = async () => {
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch("/api/productKid", {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-
+    body: JSON.stringify({
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          showbool: false,
+          userData: this.userData,
         }),
       })
 
       if (!res.ok) throw new Error("MidCategory hide Error")
       const result = await res.json();
       this.show = true;
-      return result.data;
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Hide none connetcion";
@@ -293,20 +302,25 @@ export class MidCategory implements Category {
   shows = async () => {
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+        const res = await fetch("/api/productKid", {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-
+    body: JSON.stringify({
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          showbool: true,
+          userData: this.userData,
         }),
       })
 
-      if (!res.ok) throw new Error("MidCategory shows Error")
+      if (!res.ok) throw new Error("MidCategory hide Error")
       const result = await res.json();
-      this.show = false;
-      return result.data;
+      this.show = true;
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Show none connetcion";

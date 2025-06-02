@@ -15,7 +15,6 @@ export async function GET(request: Request) {   //get all data
 
     const { searchParams } = new URL(request.url);
     const domainUrl = searchParams.get("domainUrl");
-    console.log("ass"+domainUrl);
     const response = await fetch(`${domainUrl}/Product_Imformation/getProduct_Information`);
     const result: any = await response.json();
     const transResult:any=Object.values(result);   //HashMap data to List
@@ -23,7 +22,7 @@ export async function GET(request: Request) {   //get all data
       externalData: transResult,
       timestamp: new Date().toISOString()
     };
-    if (!response.ok) throw new Error('Insert API失敗了')
+    if (!response.ok) throw new Error('GET API失敗了')
     return NextResponse.json({ method: 'GET', sucess: true, message: '取得資料成功', res: data })
   } catch (error) {
     return NextResponse.json(

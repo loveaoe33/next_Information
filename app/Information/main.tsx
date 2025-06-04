@@ -5,6 +5,7 @@ import "./css/information_main.css"
 import Template_Md from "./template_md";
 import ModalLogin from "./modal/modal_login";
 import ModalAdmin from "./modal/modal_manager";
+import ModalDetail from "./modal/modal_manager_detail";
 import * as api_Manager from "./lib/information_state";
 import isEqual from 'lodash/isEqual';
 
@@ -79,7 +80,7 @@ export default function main() {
     const [kidData, setKid] = useState<any[] | null>([]);//fetch Kid
 
 
-    const [treeData, setTree] = useState<[]>([]);//fetch Tree
+    const [treeData, setTree] = useState<any[] | null>([]);//fetch Tree
 
     // 儲存上一輪的資料
     const prevRef = useRef({ headData, kidData, treeData });
@@ -113,25 +114,46 @@ export default function main() {
     }
 
     const fetch_headInformation = async (): Promise<void> => {
-        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
+        const head: any = await api_Manager.MajorCategory_Api({
+            id: 0,
+            header: "",
+            hashcode: "",
+            domain: domain,
+            userData: "",
+        }).fetchs();
         const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
         setHead(parsed);
 
     }
 
     const fetch_kidInformation = async (): Promise<void> => {
-        const kid: any = await api_Manager.MidCategory_Api(0,"", "", "", domain, "").fetchs();
+        const kid: any = await api_Manager.MidCategory_Api({
+            id: 0,
+            headHashCode: "",
+            header: "",
+            hashcode: "",
+            domain,
+            userData: "",
+        }).fetchs();
         const parsed = kid.res.externalData.map(JSON.parse);  //Json string to Json
         setKid(parsed);
 
     }
 
     const fetch_treeInformation = async (): Promise<void> => {
-        const head: any = await api_Manager.MajorCategory_Api(0, "", "", domain, "").fetchs();
-        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
-        setHead(parsed);
+        const tree: any = await api_Manager.MinorCategory_Api({
+            id: 0,
+            header: "",
+            kid_header: "",
+            hashcode: "",
+            domain,
+            userData: "",
+        }).fetchs();
 
-    }
+        const parsed = tree.res.externalData.map(JSON.parse);  // Json string to Json
+        setTree(parsed);
+    };
+
 
     const fetch_Information = async (caseSelect: string): Promise<void> => {
         // const [head, ked, tree] = await Promise.all([
@@ -150,10 +172,10 @@ export default function main() {
             case "treeCase":
                 fetch_treeInformation();
             case "all":
-                await Promise.all([fetch_headInformation(),fetch_kidInformation(),fetch_treeInformation()]);
+                await Promise.all([fetch_headInformation(), fetch_kidInformation(), fetch_treeInformation()]);
                 break;
         }
-           console.log("中項目"+kidData);
+        console.log("中項目" + kidData);
 
         //   setKid(ked);
         //   setTree(tree);
@@ -264,8 +286,12 @@ export default function main() {
                         <span className="span-account">用戶資訊:</span>
                         <button className="main-login-btn" onClick={() => setLoginOpent(true)}>登入</button>
                     </div>
-                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
-                    <ModalLogin isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />
+                    
+                    {/* {templateMap.get("template_Admin") && (headData) ? <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} /> : <Template_Md />} */}
+
+                    {/* {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />} */}
+                    <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />
+                  
                 </div>
 
             </div>

@@ -2,6 +2,7 @@
 import Modal from "react-modal";
 import "../css/information_manager.css";
 import { useRef, useState } from "react";
+import ModalDetail from "./modal_manager_detail";
 import * as api_Manager from "../lib/information_state";
 import { ToastContainer, toast } from 'react-toastify';
 import React from "react";
@@ -21,12 +22,17 @@ interface LoginCheck {
     kidData: any[] | undefined | null;
     treeData: any[] | undefined | null;
 }
-const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, title, account, jwtoken, leve }: LoginCheck) => {
+
+const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, treeData, title, account, jwtoken, leve }: LoginCheck) => {
     const [domain, setDomain] = useState('http://localhost:8080');
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
-    const [Minor, setMinor] = useState<string>("");
+    const [MinorItem, setMinor] = useState<string>("");
     const headSelectRef = useRef<HTMLSelectElement>(null);
+    const kidSelectRef = useRef<HTMLSelectElement>(null);
+    const [ModalDetailbool,setDetail]= useState<boolean>(false);
+
+
 
     const errorAlert = (message: string): void => {
         toast.error(message, {
@@ -57,7 +63,13 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
         if (MajorItem === "") {
             errorAlert("不可為空白!")
         } else {
-            const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(0, MajorItem, "", domain, "1,loveaoe33,456,0");
+            const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api({
+                id: 0,
+                header: MajorItem,
+                hashcode: "",
+                domain,
+                userData: "1,loveaoe33,456,0",
+            });
             const log: string = await api.add();
             switch (log) {
 
@@ -80,7 +92,13 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
 
     }
     const deleteMajorCategory = async (hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(Number(event.currentTarget.id), MajorItem, hashCode, domain, "1,loveaoe33,456,0");
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api({
+            id: Number(event.currentTarget.id),
+            header: MajorItem,
+            hashcode: hashCode,
+            domain: domain,
+            userData: "1,loveaoe33,456,0",
+        });
         const log = await api.delete();
         switch (log) {
             case "Server Delete none connetcion":
@@ -99,7 +117,13 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
     }
 
     const stateMajorCategoty = async (caseSelect: string, hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api(Number(event.currentTarget.id), MajorItem, hashCode, domain, "1,loveaoe33,456,0");
+        const api: api_Manager.MajorCategory = api_Manager.MajorCategory_Api({
+            id: Number(event.currentTarget.id),
+            header: MajorItem,
+            hashcode: hashCode,
+            domain: domain,
+            userData: "1,loveaoe33,456,0",
+        });
         const log = (caseSelect === "show") ? await api.shows() : await api.hide();
         switch (log) {
             case "Server Hide none connetcion":
@@ -127,7 +151,14 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
         if (MidItem === "" || headSelectRef.current?.value === "") {
             errorAlert("不可為空白!")
         } else {
-            const api = api_Manager.MidCategory_Api(0, headSelectRef.current?.value, MidItem, "", domain, "1,loveaoe33,456,0");
+            const api = api_Manager.MidCategory_Api({
+                id: 0,
+                headHashCode: headSelectRef.current?.value ?? "",
+                header: MidItem,
+                hashcode: "",
+                domain,
+                userData: "1,loveaoe33,456,0",
+            });
             const log = await api.add();
             switch (log) {
                 case "Server Insert none connetcion":
@@ -151,7 +182,14 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
 
     const deleteMidCategory = async (hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         alert(Number(event.currentTarget.id));
-        const api = api_Manager.MidCategory_Api(Number(event.currentTarget.id), "",MidItem, hashCode, domain, "1,loveaoe33,456,0");
+        const api = api_Manager.MidCategory_Api({
+            id: Number(event.currentTarget.id),
+            headHashCode: "",
+            header: MidItem,
+            hashcode: hashCode,
+            domain,
+            userData: "1,loveaoe33,456,0",
+        });
         const log = await api.delete();
         switch (log) {
             case "Server Delete none connetcion":
@@ -174,7 +212,14 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
 
 
     const stateMidCategoty = async (caseSelect: string, hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(Number(event.currentTarget.id), "",MidItem, hashCode, domain, "1,loveaoe33,456,0");
+        const api = api_Manager.MidCategory_Api({
+            id: Number(event.currentTarget.id),
+            headHashCode: "",
+            header: MidItem,
+            hashcode: hashCode,
+            domain,
+            userData: "1,loveaoe33,456,0",
+        });
         const log = (caseSelect === "show") ? await api.shows() : await api.hide();
         alert(log)
         switch (log) {
@@ -201,25 +246,53 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
 
 
     const addMinorCategory = async (): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, "", MajorItem, "", domain, "1,loveaoe33,456,0");
-        const log = await api.add();
+        if (MinorItem === "") {
+            errorAlert("不可為空白!")
+        } else {
+            const api = api_Manager.MinorCategory_Api({
+                id: 0,
+                header: MinorItem,
+                kid_header: kidSelectRef.current?.value ?? "",
+                hashcode: "",
+                domain,
+                userData: "1,loveaoe33,456,0",
+                // img_url 和 content_json 是 optional，可以不寫
+            });
 
-        switch (log) {
-            case "Server Insert none connetcion":
-                alert("新增API伺服器異常");
-                break;
-            case "sucess":
-                alert("新增成功!");
-                break;
-            case "fail":
-                alert("新增失敗，請聯繫專員!");
-                break;
+            const log = await api.add();
+            switch (log) {
+                case "Server Insert none connetcion":
+                    errorAlert("新增API伺服器異常");
+                    break;
+                case "sucess":
+                    successAlert("新增成功!");
+                    fetch_Information("treeCase");
+                    break;
+                case "fail":
+                    errorAlert("新增失敗，請聯繫專員!");
+                    break;
+                case "Account has no permissions":
+                    errorAlert("權限錯誤，請聯繫專員!");
+                    break;
+            }
+
+
+
+
         }
+
     }
 
     const deleteMinorCategory = async (hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         alert("code" + hashCode + "id" + event.currentTarget.id);
-        const api = api_Manager.MidCategory_Api(Number(event.currentTarget.id), "", MajorItem, hashCode, domain, "1,loveaoe33,456,0");
+        const api = api_Manager.MinorCategory_Api({
+            id: Number(event.currentTarget.id),
+            header: "",
+            kid_header: MajorItem,
+            hashcode: hashCode,
+            domain,
+            userData: "1,loveaoe33,456,0",
+        });
         const log = await api.delete();
         switch (log) {
             case "Server Delete none connetcion":
@@ -227,9 +300,13 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
                 break;
             case "sucess":
                 alert("刪除成功!");
+                fetch_Information("treeCase");
                 break;
             case "fail":
                 alert("刪除失敗，請聯繫專員!");
+                break;
+            case "Account has no permissions":
+                errorAlert("權限錯誤，請聯繫專員!");
                 break;
         }
     }
@@ -237,20 +314,31 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
 
 
     const stateMinorCategoty = async (caseSelect: string, hashCode: string, event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-        const api = api_Manager.MidCategory_Api(0, "", MajorItem, "", domain, "1,loveaoe33,4556,0");
+        const api = api_Manager.MinorCategory_Api({
+            id: Number(event.currentTarget.id),
+            header: "",
+            kid_header: MajorItem,
+            hashcode: hashCode,
+            domain,
+            userData: "1,loveaoe33,456,0",
+        });
         const log = (caseSelect === "show") ? await api.shows() : await api.hide();
         switch (log) {
             case "Server Hide none connetcion":
-                alert("隱藏API伺服器異常");
+                errorAlert("隱藏API伺服器異常");
                 break;
             case "Server Show none connetcion":
-                alert("顯現API伺服器異常");
+                errorAlert("顯現API伺服器異常");
                 break;
             case "sucess":
                 alert("狀態更新成功!");
+                fetch_Information("treeCase");
                 break;
             case "fail":
-                alert("狀態更新失敗，請聯繫專員!");
+                errorAlert("狀態更新失敗，請聯繫專員!");
+                break;
+            case "Account has no permissions":
+                errorAlert("權限錯誤，請聯繫專員!");
                 break;
         }
     }
@@ -364,9 +452,14 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
                         </div>
 
                         <ul id="categoryList">
+                
 
                             {kidData?.map((item, index) => (
-                                (item.showbool) ? <li className="category-item">
+                                
+                                (item.showbool) ? 
+                                
+                                
+                                <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
                                         <button id={item.id} onClick={(e) => stateMidCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
@@ -408,9 +501,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
                 <div className="category-section">
                     <h2>小項類別管理</h2>
                     <div className="input-group">
-                        <select id="majorSelect"></select>
-                        <input type="text" id="midInput" placeholder="輸入小項類別" />
-                        <button className="addMajor" onClick={addMidCategory}>新增小項目</button>
+                        <select id="majorSelect" ref={kidSelectRef}>{kidData?.map((item, index) => (<option key={index} value={item.hashcode}>{item.header}</option>))}</select>
+                        <input type="text" id="midInput" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinor(e.target.value)} placeholder="輸入小項類別" />
+                        <button className="addMajor" onClick={addMinorCategory}>新增小項目</button>
 
                     </div>
                     <div className="category-list" id="midList"></div>
@@ -424,22 +517,22 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
                         </div>
 
                         <ul id="categoryList">
-                            <li className="category-item">
-                                <span className="category-name">類項 1</span>
-                                <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
-                                    <button className="category-toggle-hide-btn">👁️‍🗨️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
-                            <li className="category-item">
-                                <span className="category-name">類項 2</span>
-                                <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
-                                    <button className="category-toggle-hide-btn">👁️‍🗨️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
+
+                            {treeData?.map((item, index) => (
+                                (item.showbool) ? <li className="category-item">
+                                    <span className="category-name">{item.header}</span>
+                                    <div className="actions">
+                                        <button id={item.id} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={(e) => stateMinorCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
+                                        <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
+                                    </div>
+                                </li> : ""
+
+
+                            ))}
+
+
+
                         </ul>
 
                     </div>
@@ -452,29 +545,28 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, ti
 
                         </div>
                         <ul id="categoryList">
-                            <li className="category-item">
-                                <span className="category-name">類項 1</span>
-                                <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
-                                    <button className="category-toggle-view-btn">👁️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
-                            <li className="category-item">
-                                <span className="category-name">類項 2</span>
-                                <div className="actions">
-                                    <button className="category-toggle-modal-btn">📝</button>
-                                    <button className="category-toggle-view-btn">👁️</button>
-                                    <button className="category-delete-btn">🗑️</button>
-                                </div>
-                            </li>
+                            {treeData?.map((item, index) => (
+                                (!item.showbool) ? <li className="category-item">
+                                    <span className="category-name">{item.header}</span>
+                                    <div className="actions">
+                                        <button id={item.id} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={(e) => stateMinorCategoty("show", item.hashcode, e)} className="category-toggle-hide-btn">👁️顯示</button>
+                                        <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
+                                    </div>
+                                </li> : ""
+
+
+                            ))}
                         </ul>
 
                     </div>
 
                 </div>
+
             </div>
         </div>
+     
+         
         <ToastContainer />
     </Modal>
     );

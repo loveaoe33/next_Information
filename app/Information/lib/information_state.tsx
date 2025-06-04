@@ -26,7 +26,7 @@ export class MajorCategory implements Category {
   private hashcode: string | undefined | null;
   private create_date: string | undefined | null;
   private create_name: string | undefined | null;
-  private show: Boolean | undefined | null;
+  private showbool: Boolean | undefined | null;
   private domain: string | undefined | null;
   private userData: string | undefined | null;
   constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
@@ -120,7 +120,7 @@ export class MajorCategory implements Category {
 
       if (!res.ok) throw new Error("MajorCategory hide Error")
       const result = await res.json();
-      this.show = false;
+      this.showbool = false;
       return result.res;
     } catch (err) {
       return "Server Hide none connetcion";
@@ -129,7 +129,7 @@ export class MajorCategory implements Category {
   shows = async () => {
     try {
 
-   const res = await fetch('/api/productAll', {
+      const res = await fetch('/api/productAll', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -144,9 +144,9 @@ export class MajorCategory implements Category {
         }),
       })
 
-      if (!res.ok) throw new Error("MajorCategory shows Error")
+      if (!res.ok) throw new Error("MajorCategory show Error")
       const result = await res.json();
-      this.show = true;
+      this.showbool = true;
       return result.res;
     } catch (err) {
       alert(err);
@@ -182,16 +182,16 @@ export class MidCategory implements Category {
   private hashcode: String | undefined | null;
   private create_date: String | undefined | null;
   private create_name: String | undefined | null;
-  private show: Boolean | undefined | null;
+  private showbool: Boolean | undefined | null;
   private focus_number: number | undefined | null;
   private domain: string | undefined | null;
   private userData: string | undefined | null;
 
 
-  constructor(id: number,headHashCode:string| undefined | null ,header: string, hashcode: string, domain: string, userData: string) {
+  constructor(id: number, headHashCode: string | undefined | null, header: string, hashcode: string, domain: string, userData: string) {
     this.id = id;
     this.header = header;
-    this.father_header=headHashCode;
+    this.father_header = headHashCode;
     this.hashcode = hashcode;
     this.userData = userData;
     this.domain = domain;
@@ -220,7 +220,7 @@ export class MidCategory implements Category {
         },
         body: JSON.stringify({
           id: this.id,
-          father_header:this.father_header,
+          father_header: this.father_header,
           hashcode: this.hashcode,
           domainUrl: this.domain,
           header: this.header,
@@ -254,7 +254,7 @@ export class MidCategory implements Category {
           hashcode: this.hashcode,
           domainUrl: this.domain,
           header: this.header,
-          father:this.father_header,
+          father: this.father_header,
           userData: this.userData,
         }),
       })
@@ -279,7 +279,7 @@ export class MidCategory implements Category {
         headers: {
           'Content-Type': 'application/json',
         },
-    body: JSON.stringify({
+        body: JSON.stringify({
           id: this.id,
           hashcode: this.hashcode,
           domainUrl: this.domain,
@@ -291,7 +291,7 @@ export class MidCategory implements Category {
 
       if (!res.ok) throw new Error("MidCategory hide Error")
       const result = await res.json();
-      this.show = true;
+      this.showbool = true;
       return result.res;
     } catch (err) {
       alert(err);
@@ -302,12 +302,12 @@ export class MidCategory implements Category {
   shows = async () => {
     try {
 
-        const res = await fetch("/api/productKid", {
+      const res = await fetch("/api/productKid", {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-    body: JSON.stringify({
+        body: JSON.stringify({
           id: this.id,
           hashcode: this.hashcode,
           domainUrl: this.domain,
@@ -317,9 +317,9 @@ export class MidCategory implements Category {
         }),
       })
 
-      if (!res.ok) throw new Error("MidCategory hide Error")
+      if (!res.ok) throw new Error("MidCategory show Error")
       const result = await res.json();
-      this.show = true;
+      this.showbool = true;
       return result.res;
     } catch (err) {
       alert(err);
@@ -354,28 +354,31 @@ export class MidCategory implements Category {
 export class MinorCategory implements Category {
   private api_url = "";
   private id: number | undefined | null;;
-  private header: String | undefined | null;
+  private header: string | undefined | null;
 
-  private father_header: String | undefined | null;
-  private top_header: String | undefined | null;
-  private hashcode: String | undefined | null;
-  private create_date: String | undefined | null;
-  private create_name: String | undefined | null;
+  private kid_header: string | undefined | null;
+  private hashcode: string | undefined | null;
+  private create_date: string | undefined | null;
+  private create_name: string | undefined | null;
   private focus_number: number | undefined | null;
-  private img_url: String | undefined | null;
-  private show: Boolean | undefined | null;
-  private content_json: String | undefined | null;
-  private domain: String | undefined | null;
-  private userData: String | undefined | null;
-  constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
+  private img_url: string | undefined | null;
+  private showbool: Boolean | undefined | null;
+  private content_json: string | undefined | null;
+  private domain: string | undefined | null;
+  private userData: string | undefined | null;
+  constructor(id: number, header: string, kid_header: string | null | undefined, hashcode: string, domain: string, userData: string, img_url?: string | undefined | null, content_json?: string | undefined | null) {
     this.id = id;
     this.header = header;
+    this.kid_header = kid_header;
     this.hashcode = hashcode;
     this.userData = userData;
     this.domain = domain;
+    this.img_url = img_url;
+    this.content_json = content_json;
   }
   fetchs = async (): Promise<[]> => {
-    const res = await fetch('/api/productDetail', {
+    const query = new URLSearchParams({ id: "123", domainUrl: this.domain ?? "" }).toString();
+    const res = await fetch(`/api/productDetail?${query}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -384,52 +387,56 @@ export class MinorCategory implements Category {
     console.log(`小項目:`);
     return res.json();
   };
-
-
-
-
-  add = async (data: Category): Promise<string> => {
+  add = async (): Promise<string> => {
     try {
-      const res = await fetch(this.api_url, {
+      const res = await fetch('/api/productDetail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          kid_header: this.kid_header,
+          domainUrl: this.domain,
+          header: this.header,
+          userData: this.userData,
         }),
       })
-
-      if (!res.ok) throw new Error("MinorCategory add Error")
       const result = await res.json();
-      return result.data;
+      if (!res.ok) throw new Error("MajorCategory add Error")
+      return result.res;
     } catch (err) {
+
       return "Server Insert none connetcion";
     }
-
-
   }
   delete = async (): Promise<string> => {
+
+
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch("/api/productDetail", {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          kid_header: this.kid_header,
+          domainUrl: this.domain,
+          header: this.header,
+          userData: this.userData,
         }),
       })
 
-      if (!res.ok) throw new Error("MinorCategory delete Error")
+      if (!res.ok) throw new Error("MidCategory delete Error")
       const result = await res.json();
-      console.log(result);
-      return result.data;
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Delete none connetcion";
-
     }
 
   }
@@ -457,20 +464,25 @@ export class MinorCategory implements Category {
   hide = async () => {
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch("/api/productDetail", {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          showbool: false,
+          userData: this.userData,
         }),
       })
 
       if (!res.ok) throw new Error("MinorCategory hide Error")
       const result = await res.json();
-      this.show = true;
-      return result.data;
+      this.showbool = true;
+      return result.res;
     } catch (err) {
       alert(err);
       return "Server Hide none connetcion";
@@ -480,23 +492,28 @@ export class MinorCategory implements Category {
   shows = async () => {
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch("/api/productDetail", {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          header: this.header,
+          showbool: true,
+          userData: this.userData,
         }),
       })
 
-      if (!res.ok) throw new Error("MinorCategory shows Error")
+      if (!res.ok) throw new Error("MinorCategory show Error")
       const result = await res.json();
-      this.show = false;
-      return result.data;
+      this.showbool = true;
+      return result.res;
     } catch (err) {
       alert(err);
-      return "Server Show  none connetcion";
+      return "Server Show none connetcion";
 
     }
 
@@ -511,8 +528,7 @@ export class MinorCategory implements Category {
     return {
       id: this.id,
       header: this.header,
-      top_header: this.top_header,
-      father_header: this.father_header,
+      kid_header: this.kid_header,
       hashcode: this.hashcode,
       create_date: this.create_date,
       create_name: this.create_name,
@@ -572,22 +588,62 @@ export class MinorCategory implements Category {
 
 
 
-export function MajorCategory_Api(id: number, header: string, hashcode: string, domain: string, userData: string): MajorCategory {
-  const Major = new MajorCategory(id, header, hashcode, domain, userData);
-  return Major;
-
+export function MajorCategory_Api({
+  id,
+  header,
+  hashcode,
+  domain,
+  userData,
+}: {
+  id: number;
+  header: string;
+  hashcode: string;
+  domain: string;
+  userData: string;
+}): MajorCategory {
+  return new MajorCategory(id, header, hashcode, domain, userData);
 }
 
-export function MidCategory_Api(id: number,headHashCode:string| undefined| null ,header: string, hashcode: string, domain: string, userData: string): MidCategory {
-  const Kid = new MidCategory(id,headHashCode, header, hashcode, domain, userData);
-  return Kid;
 
+export function MidCategory_Api({
+  id,
+  headHashCode,
+  header,
+  hashcode,
+  domain,
+  userData,
+}: {
+  id: number;
+  headHashCode?: string | null;
+  header: string;
+  hashcode: string;
+  domain: string;
+  userData: string;
+}): MidCategory {
+  return new MidCategory(id, headHashCode, header, hashcode, domain, userData);
 }
 
 
-export function MinorCategory_Api(id: number, header: string, hashcode: string, domain: string, userData: string): MinorCategory {
-  const Minor = new MinorCategory(id, header, hashcode, domain, userData);
-  return Minor;
 
-
+export function MinorCategory_Api({
+  id,
+  header,
+  kid_header,
+  hashcode,
+  domain,
+  userData,
+  img_url,
+  content_json,
+}: {
+  id: number;
+  header: string;
+  kid_header?: string | null;
+  hashcode: string;
+  domain: string;
+  userData: string;
+  img_url?: string | null;
+  content_json?: string | null;
+}): MinorCategory {
+  return new MinorCategory(id, header, kid_header, hashcode, domain, userData, img_url, content_json);
 }
+

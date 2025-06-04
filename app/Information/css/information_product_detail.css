@@ -1,0 +1,92 @@
+
+    
+    .categoryDetail_container {
+  background-color: #f7fafc; /* Tailwind 的 bg-gray-100 */
+  padding-top: 2.5rem;       /* Tailwind 的 py-10 */
+  padding-bottom: 2.5rem;
+}
+    
+    #categoryList_Detail {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .category-item_Detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f5f5f5;
+      margin-bottom: 8px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .category-item_Detail:hover {
+      background-color: #eaeaea;
+    }
+
+    .category-name_Detail {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .category_Detail-toggle-view-btn,
+    .category_Detail-toggle-hide-btn,
+    .category_Detail-delete-btn {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .category_Detail-toggle-view-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .category_Detail-toggle-view-btn:hover {
+      background-color: #43a047;
+    }
+
+    .category_Detail-toggle-hide-btn {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .category_Detail-toggle-hide-btn:hover {
+      background-color: #fb8c00;
+    }
+
+    .category_Detail-delete-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .category_Detail-delete-btn:hover {
+      background-color: #e53935;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .category-item_Detail {
+        background-color: #2a2a2a;
+      }
+
+      .category-item_Detail:hover {
+        background-color: #3a3a3a;
+      }
+
+      .category-name_Detail {
+        color: #f1f1f1;
+      }
+    }
+

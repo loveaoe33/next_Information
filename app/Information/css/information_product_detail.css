@@ -1,18 +1,59 @@
 
-    
-    .categoryDetail_container {
-  background-color: #f7fafc; /* Tailwind 的 bg-gray-100 */
-  padding-top: 2.5rem;       /* Tailwind 的 py-10 */
-  padding-bottom: 2.5rem;
-}
-    
-    #categoryList_Detail {
+    body {
+      background-color: #f7fafc;
+      padding: 2.5rem 1rem;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #2d3748;
+    }
+
+    form > div {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #4a5568;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    #category-list {
       list-style: none;
       padding: 0;
       margin: 0;
     }
 
-    .category-item_Detail {
+    .category-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -23,11 +64,11 @@
       transition: background-color 0.3s;
     }
 
-    .category-item_Detail:hover {
+    .category-item:hover {
       background-color: #eaeaea;
     }
 
-    .category-name_Detail {
+    .category-name {
       font-weight: 600;
       font-size: 1rem;
       color: #333;
@@ -38,9 +79,10 @@
       gap: 8px;
     }
 
-    .category_Detail-toggle-view-btn,
-    .category_Detail-toggle-hide-btn,
-    .category_Detail-delete-btn {
+    .category-toggle-view-btn,
+    .category-toggle-hide-btn,
+    .category-delete-btn,
+    .submit-btn {
       border: none;
       padding: 6px 12px;
       border-radius: 6px;
@@ -49,44 +91,76 @@
       transition: background-color 0.2s, color 0.2s;
     }
 
-    .category_Detail-toggle-view-btn {
+    .category-toggle-view-btn {
       background-color: #4caf50;
       color: white;
     }
 
-    .category_Detail-toggle-view-btn:hover {
+    .category-toggle-view-btn:hover {
       background-color: #43a047;
     }
 
-    .category_Detail-toggle-hide-btn {
+    .category-toggle-hide-btn {
       background-color: #ff9800;
       color: white;
     }
 
-    .category_Detail-toggle-hide-btn:hover {
+    .category-toggle-hide-btn:hover {
       background-color: #fb8c00;
     }
 
-    .category_Detail-delete-btn {
+    .category-delete-btn {
       background-color: #f44336;
       color: white;
     }
 
-    .category_Detail-delete-btn:hover {
+    .category-delete-btn:hover {
       background-color: #e53935;
     }
 
+    .text-right {
+      text-align: right;
+    }
+
+    .submit-btn {
+      background-color: #2563eb;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+    }
+
+    .submit-btn:hover {
+      background-color: #1e40af;
+    }
+
     @media (prefers-color-scheme: dark) {
-      .category-item_Detail {
-        background-color: #2a2a2a;
+      body {
+        background-color: #1a202c;
       }
 
-      .category-item_Detail:hover {
+      .container {
+        background-color: #2d3748;
+        color: #f7fafc;
+      }
+
+      label,
+      .category-name {
+        color: #f7fafc;
+      }
+
+      input,
+      textarea {
+        background-color: #4a5568;
+        color: white;
+        border: 1px solid #718096;
+      }
+
+      .category-item {
         background-color: #3a3a3a;
       }
 
-      .category-name_Detail {
-        color: #f1f1f1;
+      .category-item:hover {
+        background-color: #4a4a4a;
       }
     }
-
+ 

@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import ModalDetail from "./modal_manager_detail";
 import * as api_Manager from "../lib/information_state";
 import { ToastContainer, toast } from 'react-toastify';
+import { treeData as treeDataType } from './modal_manager_detail';
+
 import React from "react";
 
 
@@ -23,6 +25,8 @@ interface LoginCheck {
     treeData: any[] | undefined | null;
 }
 
+
+ 
 const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, treeData, title, account, jwtoken, leve }: LoginCheck) => {
     const [domain, setDomain] = useState('http://localhost:8080');
     const [MajorItem, setMajor] = useState<string>("");
@@ -30,7 +34,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
     const [MinorItem, setMinor] = useState<string>("");
     const headSelectRef = useRef<HTMLSelectElement>(null);
     const kidSelectRef = useRef<HTMLSelectElement>(null);
-    const [ModalDetailbool,setDetail]= useState<boolean>(false);
+    const [ModalDetailbool, setDetail] = useState<boolean>(false);
+    const [formOpen, setFormOpen] = useState<boolean>(false);
+    const [dataTree,setTree]=useState<treeDataType>();
 
 
 
@@ -343,6 +349,14 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
         }
     }
 
+    const isCloseForm = (): void => {
+        setFormOpen(false);
+    }
+
+    const showForm = (data:treeDataType) => {
+        setFormOpen(true);
+        setTree(data);
+    }
 
     return (<Modal
         isOpen={isOpen}
@@ -452,20 +466,20 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                         </div>
 
                         <ul id="categoryList">
-                
+
 
                             {kidData?.map((item, index) => (
-                                
-                                (item.showbool) ? 
-                                
-                                
-                                <li className="category-item">
-                                    <span className="category-name">{item.header}</span>
-                                    <div className="actions">
-                                        <button id={item.id} onClick={(e) => stateMidCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
-                                        <button id={item.id} onClick={(e) => deleteMidCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
-                                    </div>
-                                </li> : ""
+
+                                (item.showbool) ?
+
+
+                                    <li className="category-item">
+                                        <span className="category-name">{item.header}</span>
+                                        <div className="actions">
+                                            <button id={item.id} onClick={(e) => stateMidCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
+                                            <button id={item.id} onClick={(e) => deleteMidCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
+                                        </div>
+                                    </li> : ""
 
 
                             ))}
@@ -522,7 +536,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                                 (item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button id={item.id} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={()=>showForm(item)}    className="category-toggle-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
@@ -549,7 +563,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                                 (!item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button id={item.id} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={()=>showForm(item)}    className="category-toggle-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("show", item.hashcode, e)} className="category-toggle-hide-btn">👁️顯示</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
@@ -565,8 +579,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
             </div>
         </div>
-     
-         
+        <ModalDetail isClose={isCloseForm}  fetch_Information={fetch_Information} isOpen={formOpen} treeData={dataTree} />
+
+
         <ToastContainer />
     </Modal>
     );

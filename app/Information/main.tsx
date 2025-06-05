@@ -289,8 +289,8 @@ export default function main() {
                     
                     {/* {templateMap.get("template_Admin") && (headData) ? <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} /> : <Template_Md />} */}
 
-                    {/* {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />} */}
-                    <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} />
+                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
+                    <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} treeData={treeData}   />
                   
                 </div>
 

@@ -1,38 +1,195 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import Modal from 'react-modal';
 import Image from 'next/image';
+import { Category, MinorCategory_Api } from "../lib/information_state";
 import '../css/information_product_detail.css';
+import { nanoid } from 'nanoid'
+import { initialize } from "next/dist/server/lib/render-server";
+import React from "react";
+import { isEqual } from "lodash";
+
 
 type product = {
     isClose: () => void;
-    fetch_Information:(caseSelect: string) => Promise<void>;
+    fetch_Information: (caseSelect: string) => Promise<void>;
+    errorAlert: (message: string) => void;
+    successAlert: (message: string) => void;
     isOpen: boolean;
-    treeData: treeData | null | undefined;
+    domain: string;
+    treeData?: treeData | null;
 }
 
 export type treeData = {
-    id: number;
-    header: string;
-    kid_header: string;
-    hashcode: string;
-    focus_number: number;
-    img_url: string;
-    showbool: boolean;
-    content_json: string;
+    id?: number | null;
+    header?: string | null;
+    kid_header?: string | null;
+    hashcode?: string | null;
+    focus_number?: number | null;
+    img_url?: string | null;
+    showbool?: boolean | null;
+    content_json?: string | null;
 }
 
 export type treeContent = {
-    product_Header:string;
-    product_Introduction:string;
-    product_Specification:string;
-    product_Price:Number;
-    product_Remark:string;
-
-
+    product_Header?: string | null;
+    product_Introduction?: string | null;
+    product_Specification?: string | null;
+    product_Price?: number | null;
+    product_Remark?: string | null;
+    jsonCode: string;
 }
-const ModalView = ({ isClose,fetch_Information, isOpen, treeData }: product) => {
+
+const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpen, domain, treeData }: product) => {
+
+
+    const initialTreeObject: treeContent = {
+        product_Header: "",
+        product_Introduction: "",
+        product_Specification: "",
+        product_Price: 0,
+        product_Remark: "",
+        jsonCode: "",
+    };
+    const prevRef = useRef(treeData);
+
+    const [treeObject, setTree] = useState<treeContent>(initialTreeObject)
+
+    const [treeImgUrl, setImgUrl] = useState<string>("");
+    const handleChange = (field: keyof treeContent, value: string | number): void => {
+        setTree((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+
+    }
+
+
+    useEffect(() => {  //when mount
+        changeCode();
+
+        return () => {
+            console.log("❌ useEffect Cleanup");
+        };
+    }, [])
+
+    const changeCode = (): void => {
+        setTree(initialTreeObject);
+        setImgUrl("");
+        setTree((prev) => ({
+            ...prev,
+            jsonCode: nanoid(8), // 使用 nanoid 生成唯一識別碼
+        }));
+    }
+
+
+    // 正確寫法（監聽變化）
+    useEffect(() => {
+        const current = treeData;
+        if (!isEqual(prevRef.current, current)) {
+            prevRef.current = current;
+            console.log("Tree資料有更新");
+        } else {
+            console.log("Tree資料無更新");
+
+        }
+    }, [treeData])
+
+
+
+
+    const contenCheck = (): boolean => {
+
+        const vaildations = [
+            { conditioin: !treeObject.product_Header, message: "資料驗證失敗，抬頭不可為空!" },
+            { conditioin: !treeObject.product_Introduction, message: "資料驗證失敗，介紹不可為空!" },
+            { conditioin: !treeObject.product_Specification, message: "資料驗證失敗，註記不可為空!" },
+            { conditioin: !treeObject.product_Price, message: "資料驗證失敗，金額不可為空!" },
+            { conditioin: !treeObject.jsonCode, message: "資料驗證失敗，識別碼產生錯誤!" }
+
+        ]
+        for (const { conditioin, message } of vaildations) {
+            if (conditioin) {
+                errorAlert(message);
+                return false;
+            }
+        }
+        successAlert("資料驗證成功，傳送中");
+        return true;
+    }
+
+    const postConten = (caseSelect?: string | null, id?: number | null, hashcode?: string | null, jsoncode?: string | null): void => {
+
+        if (caseSelect === "update" || caseSelect === "delete" || contenCheck()) {
+            const newJson = jsonContent(caseSelect, jsoncode);
+            updateMinorCategory(id, hashcode, newJson);
+        }
+    }
+
+    const updateMinorCategory = async (id: number | undefined | null, hashcode: string | undefined | null, data: string | undefined | null): Promise<void> => {
+        const api: Category = MinorCategory_Api({
+            id: id,
+            header: "",
+            hashcode: hashcode,
+            domain,
+            userData: "1,loveaoe33,456,0",
+            img_url: treeImgUrl,
+            content_json: data,
+            // img_url 和 content_json 是 optional，可以不寫
+        });
+
+        const log = await api.update();
+        switch (log) {
+            case "Server Update none connetcion":
+                errorAlert("新增API伺服器異常");
+                break;
+            case "sucess":
+                successAlert("更新成功!");
+                fetch_Information("treeCase");
+                changeCode();
+                break;
+            case "fail":
+                errorAlert("更新失敗，請聯繫專員!");
+                break;
+            case "Account has no permissions":
+                errorAlert("權限錯誤，請聯繫專員!");
+                break;
+        }
+    }
+
+
+    const jsonContent = (caseSelect?: string | null, jsonCode?: string | null): string => {
+        let jsonArray: treeContent[] = [];
+        try {
+            jsonArray = JSON.parse(treeData?.content_json ?? "[]");
+        } catch (error) {
+            errorAlert("JSON資料解析錯誤，請聯繫專員!");
+            jsonArray = []; // fallback
+        }
+        console.log("jsonArray1:", jsonArray,"hashCode:", jsonCode);
+        if (caseSelect == "insert") {
+            jsonArray.push(treeObject);
+            /*call insert api*/
+        }
+        else if (caseSelect == "update") {
+
+            // jsonArray = jsonArray.map(item => item.hashCode === hashCode ? { treeObject } : item)
+
+            /*call update api*/
+        } else if (caseSelect == "delete") {
+
+            jsonArray = jsonArray.filter(item => item.jsonCode !== jsonCode);
+            /*call delete api*/ 
+
+        }
+        console.log("jsonArray2:", jsonArray);
+
+        const newJson: string = JSON.stringify(jsonArray);
+
+        return newJson;
+
+    }
     return (
         <Modal
             isOpen={isOpen}
@@ -77,56 +234,63 @@ const ModalView = ({ isClose,fetch_Information, isOpen, treeData }: product) => 
 
                     <div>
                         <label>商品抬頭</label>
-                        <input type="text" placeholder="輸入商品名稱" />
+                        <input type="text" value={treeObject.product_Header ?? ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("product_Header", e.target.value)} placeholder="輸入商品名稱" />
                     </div>
 
                     <div>
                         <label>商品簡介</label>
-                        <input type="text" placeholder="簡短描述商品" />
+                        <input type="text" value={treeObject.product_Introduction ?? ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("product_Introduction", e.target.value)} placeholder="簡短描述商品" />
                     </div>
 
                     <div>
                         <label>商品規格</label>
-                        <input type="text" placeholder="例如：500ml / 白色 / XL" />
+                        <input type="text" value={treeObject.product_Specification ?? ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("product_Specification", e.target.value)} placeholder="例如：500ml / 白色 / XL" />
                     </div>
 
                     <div>
                         <label>建議售價 (NTD)</label>
-                        <input type="number" placeholder="輸入售價" />
+                        <input type="number" value={treeObject.product_Price ?? 0} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("product_Price", e.target.value)} placeholder="輸入售價" />
                     </div>
 
                     <div>
                         <label>圖片網址</label>
-                        <input type="text" placeholder="輸入圖片網址" />
+                        <input type="text" value={treeImgUrl ?? ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImgUrl(e.target.value)} placeholder="輸入圖片網址" />
                     </div>
 
                     <div>
                         <label>備註</label>
-                        <textarea rows={4} placeholder="可填寫其他說明或注意事項"></textarea>
+                        <textarea rows={4} value={treeObject.product_Remark ?? ""} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange("product_Remark", e.target.value)} placeholder="可填寫其他說明或注意事項"></textarea>
                     </div>
+
+                    <div>
+                        <label>商品識別碼:</label>
+                        <input type="text" value={treeObject.jsonCode} readOnly onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("jsonCode", e.target.value)} placeholder="輸入識別碼" />
+                    </div>
+
 
                     <div>
                         <label>商品分類清單</label>
                         <ul id="category-list">
-                            <li className="category-item">
-                                <span className="category-name">生活用品</span>
-                                <div className="actions">
-                                    <button type="button" className="category-toggle-hide-btn">帶出資訊</button>
-                                    <button type="button" className="category-delete-btn">刪除</button>
-                                </div>
-                            </li>
-                            <li className="category-item">
-                                <span className="category-name">美妝保養</span>
-                                <div className="actions">
-                                    <button type="button" className="category-toggle-hide-btn">帶出資訊</button>
-                                    <button type="button" className="category-delete-btn">刪除</button>
-                                </div>
-                            </li>
+                            {JSON.parse(treeData?.content_json || "[]").map((item: treeContent, index: number) => {
+                                return (
+                                    <li className="category-item">
+
+                                        <span className="category-name">{item.product_Header}</span>
+                                        <div className="actions">
+                                            <button type="button" id={item.jsonCode} onClick={(e) => { postConten("update", treeData?.id,treeData?.hashcode,item?.jsonCode) }} className="category-toggle-bring-btn">帶出資訊</button>
+                                            <button type="button" id={item.jsonCode} onClick={(e) => { postConten("delete", treeData?.id,treeData?.hashcode,item?.jsonCode) }} className="category-delete-btn">刪除</button>
+                                        </div>
+                                    </li>
+                                )
+                            })}
                         </ul>
                     </div>
 
+
+
+
                     <div className="text-right">
-                        <button type="submit" className="submit-btn">儲存商品</button>
+                        <button type="button" onClick={(e) => { postConten("insert", treeData?.id, treeData?.hashcode) }} className="submit-btn">儲存商品</button>
                     </div>
                 </form>
             </div>
@@ -134,4 +298,6 @@ const ModalView = ({ isClose,fetch_Information, isOpen, treeData }: product) => 
     );
 };
 
-export default ModalView;
+export default React.memo(ModalView);;
+
+

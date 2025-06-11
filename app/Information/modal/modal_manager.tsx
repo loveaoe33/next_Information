@@ -26,9 +26,9 @@ interface LoginCheck {
 }
 
 
- 
+
 const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, treeData, title, account, jwtoken, leve }: LoginCheck) => {
-    const [domain, setDomain] = useState('http://localhost:8080');
+    const [domain, setDomain] = useState<string>('http://localhost:8080');
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
     const [MinorItem, setMinor] = useState<string>("");
@@ -36,7 +36,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
     const kidSelectRef = useRef<HTMLSelectElement>(null);
     const [ModalDetailbool, setDetail] = useState<boolean>(false);
     const [formOpen, setFormOpen] = useState<boolean>(false);
-    const [dataTree,setTree]=useState<treeDataType>();
+    const [dataTree, setTree] = useState<treeDataType>();
 
 
 
@@ -248,9 +248,6 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
         }
     }
 
-
-
-
     const addMinorCategory = async (): Promise<void> => {
         if (MinorItem === "") {
             errorAlert("不可為空白!")
@@ -281,9 +278,6 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                     errorAlert("權限錯誤，請聯繫專員!");
                     break;
             }
-
-
-
 
         }
 
@@ -353,7 +347,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
         setFormOpen(false);
     }
 
-    const showForm = (data:treeDataType) => {
+    const showForm = (data: treeDataType) => {
         setFormOpen(true);
         setTree(data);
     }
@@ -397,7 +391,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                         </div>
                         <ul id="categoryList">
 
-                            {headerData?.map((item, index) => (
+                            {headerData?.map((item: any, index: number) => (
                                 (item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
@@ -423,7 +417,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                         </div>
                         <ul id="categoryList">
 
-                            {headerData?.map((item, index) => (
+                            {headerData?.map((item: any, index: number) => (
                                 (!item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
@@ -444,7 +438,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                 <div className="category-section">
                     <h2>中項類別管理</h2>
                     <div className="input-group">
-                        <select id="midSelect" ref={headSelectRef}>{headerData?.map((item, index) => (<option key={index} value={item.hashcode}>{item.header}</option>))}</select>
+                        <select id="midSelect" ref={headSelectRef}>{headerData?.map((item: any, index: number) => (<option key={index} value={item.hashcode}>{item.header}</option>))}</select>
                         <input type="text" id="midInput" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMid(e.target.value)} placeholder="輸入中項類別" />
                         <button className="addMajor" onClick={addMidCategory}>新增中項目</button>
 
@@ -468,7 +462,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                         <ul id="categoryList">
 
 
-                            {kidData?.map((item, index) => (
+                            {kidData?.map((item: any, index: number) => (
 
                                 (item.showbool) ?
 
@@ -496,7 +490,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
                         </div>
                         <ul id="categoryList">
-                            {kidData?.map((item, index) => (
+                            {kidData?.map((item: any, index: number) => (
                                 (!item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
@@ -515,7 +509,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                 <div className="category-section">
                     <h2>小項類別管理</h2>
                     <div className="input-group">
-                        <select id="majorSelect" ref={kidSelectRef}>{kidData?.map((item, index) => (<option key={index} value={item.hashcode}>{item.header}</option>))}</select>
+                        <select id="majorSelect" ref={kidSelectRef}>{kidData?.map((item: any, index: number) => (<option key={index} value={item.hashcode}>{item.header}</option>))}</select>
                         <input type="text" id="midInput" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinor(e.target.value)} placeholder="輸入小項類別" />
                         <button className="addMajor" onClick={addMinorCategory}>新增小項目</button>
 
@@ -532,11 +526,11 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
                         <ul id="categoryList">
 
-                            {treeData?.map((item, index) => (
+                            {treeData?.map((item: any, index: number) => (
                                 (item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button id={item.id} onClick={()=>showForm(item)}    className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={() => showForm(item)} className="category-toggle-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
@@ -559,11 +553,11 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
                         </div>
                         <ul id="categoryList">
-                            {treeData?.map((item, index) => (
+                            {treeData?.map((item: any, index: number) => (
                                 (!item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button id={item.id} onClick={()=>showForm(item)}    className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={() => showForm(item)} className="category-toggle-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("show", item.hashcode, e)} className="category-toggle-hide-btn">👁️顯示</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
@@ -579,7 +573,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
             </div>
         </div>
-        <ModalDetail isClose={isCloseForm}  fetch_Information={fetch_Information} isOpen={formOpen} treeData={dataTree} />
+        <ModalDetail isClose={isCloseForm} fetch_Information={fetch_Information} errorAlert={errorAlert} successAlert={successAlert} isOpen={formOpen} domain={domain} treeData={dataTree} />
 
 
         <ToastContainer />

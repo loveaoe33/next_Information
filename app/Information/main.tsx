@@ -94,14 +94,16 @@ export default function main() {
             console.log("❌ useEffect Cleanup");
         };
     }, [])
+
+
     // 正確寫法（監聽變化）
     useEffect(() => {
         const current = { headData, kidData, treeData };
         if (!isEqual(prevRef.current, current)) {
             prevRef.current = current;
-            console.log("資料有更新");
+            console.log("main資料有更新");
         } else {
-            console.log("資料無更新");
+            console.log("main資料無更新");
 
         }
     }, [headData, kidData, treeData])
@@ -121,7 +123,16 @@ export default function main() {
             domain: domain,
             userData: "",
         }).fetchs();
-        const parsed = head.res.externalData.map(JSON.parse);  //Json string to Json
+
+
+        const parsed:any[] = head.res.externalData.map((str: string) => {
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.warn("Invalid JSON:", str);
+                return null; // 或 return {}; 視情況
+            }
+        });  //Json string to Json
         setHead(parsed);
 
     }
@@ -135,7 +146,15 @@ export default function main() {
             domain,
             userData: "",
         }).fetchs();
-        const parsed = kid.res.externalData.map(JSON.parse);  //Json string to Json
+        const parsed:any[] = kid.res.externalData.map((str: string) => {
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.warn("Invalid JSON:", str);
+                return null; // 或 return {}; 視情況
+            }
+        });  //Json string to Json
+        // const parsed = kid.res.externalData.map(JSON.parse);  //Json string to Json
         setKid(parsed);
 
     }
@@ -149,8 +168,15 @@ export default function main() {
             domain,
             userData: "",
         }).fetchs();
-
-        const parsed = tree.res.externalData.map(JSON.parse);  // Json string to Json
+        const parsed:any[] = tree.res.externalData.map((str: string) => {
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.warn("Invalid JSON:", str);
+                return null; // 或 return {}; 視情況
+            }
+        });  //Json string to Json
+        // const parsed = tree.res.externalData.map(JSON.parse);  // Json string to Json
         setTree(parsed);
     };
 
@@ -286,12 +312,11 @@ export default function main() {
                         <span className="span-account">用戶資訊:</span>
                         <button className="main-login-btn" onClick={() => setLoginOpent(true)}>登入</button>
                     </div>
-                    
+
                     {/* {templateMap.get("template_Admin") && (headData) ? <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} /> : <Template_Md />} */}
 
                     {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
-                    <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} treeData={treeData}   />
-                  
+
                 </div>
 
             </div>

@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     const domainUrl = searchParams.get("domainUrl");
     const response = await fetch(`${domainUrl}/Product_Imformation/getProduct_Tree_Information`);
     const result: any = await response.json();
-    const transResult:any=Object.values(result);   //HashMap data to List
+    const transResult: any = Object.values(result);   //HashMap data to List
     const data: any = {
       externalData: transResult,
       timestamp: new Date().toISOString()
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();   //呼叫時會丟json過來
-    const { id, hashcode, domainUrl, header, kid_header,userData }: RequestBody = body;
+    const { id, hashcode, domainUrl, header, kid_header, userData }: RequestBody = body;
     console.log("url:" + domainUrl);
     const response = await fetch(`${domainUrl}/Product_Imformation/setProduct_Information?caseSelect=minorCase`, {
       method: 'POST',
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         id: id,
         hashcode: hashcode,
         header: header,
-        kid_header:kid_header,
+        kid_header: kid_header,
         userString: userData,
       })
     });
@@ -115,7 +115,7 @@ export async function PATCH(request: Request) {   //update state
         type: "Tree",
         id: id,
         hashcode: hashcode,
-        showbool:showbool,
+        showbool: showbool,
         userString: userData,
       })
 
@@ -138,9 +138,34 @@ export async function PATCH(request: Request) {   //update state
 
 
 
-export async function PUT(request: Request){
-  const body = await request.json()
-  return NextResponse.json({ method: 'PUT', data: body, message: '更新資料成功' })
+export async function PUT(request: Request) {  //update content
+  try {
+    const body = await request.json()
+    const { id, hashcode, domainUrl, userData, img_url, content_json }: RequestBody = body;
+    const response = await fetch(`${domainUrl}/Product_Imformation/update_Product_Detail?caseSelect=minorCase`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: "Tree",
+        id: id,
+        hashcode: hashcode,
+        userString: userData,
+        content_json: content_json,
+        img_url: img_url,
+      })
+
+    });
+    if (!response.ok) throw new Error('PUT API失敗了')
+    const data: string = await response.text();
+    return NextResponse.json({ method: 'PUT', sucess: true, message: '更新資料成功', res: data })
+  } catch (error) {
+
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
+
+  }
 }
 
 

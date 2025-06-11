@@ -6,9 +6,9 @@ import { useState } from "react"
 
 export interface Category {
   fetchs: () => Promise<[]>;
-  add: (data: Category) => Promise<string>;
+  add: () => Promise<string>;
   delete: () => Promise<string>;
-  update: () => void;
+  update: () => Promise<string>;
   hide: () => Promise<string>;
   shows: () => Promise<string>;
   touch: () => void;
@@ -20,16 +20,16 @@ export interface Category {
 
 
 export class MajorCategory implements Category {
-  private api_url: string = "";
-  private id: number | undefined | null;
-  private header: string | undefined | null;
-  private hashcode: string | undefined | null;
-  private create_date: string | undefined | null;
-  private create_name: string | undefined | null;
-  private showbool: Boolean | undefined | null;
-  private domain: string | undefined | null;
-  private userData: string | undefined | null;
-  constructor(id: number, header: string, hashcode: string, domain: string, userData: string) {
+  private api_url?: string = "";
+  private id?: number | null;
+  private header?: string | null;
+  private hashcode?: string | null;
+  private create_date?: string | null;
+  private create_name?: string | null;
+  private showbool?: Boolean | null;
+  private domain?: string | null;
+  private userData?: string | null;
+  constructor(id?: number | null, header?: string | null, hashcode?: string | null, domain?: string | null, userData?: string | null) {
     this.id = id;
     this.header = header;
     this.hashcode = hashcode;
@@ -97,8 +97,8 @@ export class MajorCategory implements Category {
     }
 
   }
-  update = () => {
-
+  update = async () => {
+    return "sucess"
   }
   hide = async () => {
     try {
@@ -176,19 +176,19 @@ export class MajorCategory implements Category {
 export class MidCategory implements Category {
   private api_url = "";
 
-  private id: number | undefined | null;;
-  private header: String | undefined | null;
-  private father_header: String | undefined | null;
-  private hashcode: String | undefined | null;
-  private create_date: String | undefined | null;
-  private create_name: String | undefined | null;
-  private showbool: Boolean | undefined | null;
-  private focus_number: number | undefined | null;
-  private domain: string | undefined | null;
-  private userData: string | undefined | null;
+  private id?: number | null;;
+  private header?: String | null;
+  private father_header?: String | null;
+  private hashcode?: String | null;
+  private create_date?: String | null;
+  private create_name?: String | null;
+  private showbool?: Boolean | null;
+  private focus_number?: number | null;
+  private domain?: string | null;
+  private userData?: string | null;
 
 
-  constructor(id: number, headHashCode: string | undefined | null, header: string, hashcode: string, domain: string, userData: string) {
+  constructor(id?: number | null, headHashCode?: string | null, header?: string | null, hashcode?: string | null, domain?: string | null, userData?: string | null) {
     this.id = id;
     this.header = header;
     this.father_header = headHashCode;
@@ -268,8 +268,8 @@ export class MidCategory implements Category {
     }
 
   }
-  update = () => {
-
+  update = async () => {
+    return "sucess"
   }
   hide = async () => {
     try {
@@ -352,21 +352,20 @@ export class MidCategory implements Category {
 
 
 export class MinorCategory implements Category {
-  private api_url = "";
-  private id: number | undefined | null;;
-  private header: string | undefined | null;
-
-  private kid_header: string | undefined | null;
-  private hashcode: string | undefined | null;
-  private create_date: string | undefined | null;
-  private create_name: string | undefined | null;
-  private focus_number: number | undefined | null;
-  private img_url: string | undefined | null;
-  private showbool: Boolean | undefined | null;
-  private content_json: string | undefined | null;
-  private domain: string | undefined | null;
-  private userData: string | undefined | null;
-  constructor(id: number, header: string, kid_header: string | null | undefined, hashcode: string, domain: string, userData: string, img_url?: string | undefined | null, content_json?: string | undefined | null) {
+  private api_url?: string | null = "";
+  private id?: number | null;
+  private header?: string | null;
+  private kid_header?: string | null;
+  private hashcode?: string | null;
+  private create_date?: string | null;
+  private create_name?: string | null;
+  private focus_number?: number | null;
+  private img_url?: string | null;
+  private showbool?: Boolean | null;
+  private content_json?: string | null;
+  private domain?: string | null;
+  private userData?: string | null;
+  constructor(id: number | undefined | null, header?: string | null, kid_header?: string | null, hashcode?: string | null, domain?: string | null, userData?: string | null, img_url?: string | null, content_json?: string | null) {
     this.id = id;
     this.header = header;
     this.kid_header = kid_header;
@@ -426,7 +425,7 @@ export class MinorCategory implements Category {
           hashcode: this.hashcode,
           kid_header: this.kid_header,
           domainUrl: this.domain,
-          header: this.header,
+          content_json: this.header,
           userData: this.userData,
         }),
       })
@@ -440,15 +439,21 @@ export class MinorCategory implements Category {
     }
 
   }
-  update = async () => {
+  update = async () => {    //update jsonString
     try {
 
-      const res = await fetch(this.api_url, {
-        method: 'POST',
+      const res = await fetch("/api/productDetail", {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          id: this.id,
+          hashcode: this.hashcode,
+          domainUrl: this.domain,
+          userData: this.userData,
+          img_url:this.img_url,
+          content_json: this.content_json,
 
         }),
       })
@@ -456,9 +461,9 @@ export class MinorCategory implements Category {
       if (!res.ok) throw new Error("MinorCategory update Error")
       const result = await res.json();
       console.log(result);
+      return result.res;
     } catch (err) {
-      alert(err);
-
+      return "Server Update none connetcion";
     }
   }
   hide = async () => {
@@ -595,11 +600,11 @@ export function MajorCategory_Api({
   domain,
   userData,
 }: {
-  id: number;
-  header: string;
-  hashcode: string;
-  domain: string;
-  userData: string;
+  id?: number | null;
+  header?: string | null;
+  hashcode?: string | null;
+  domain?: string | null;
+  userData?: string | null;
 }): MajorCategory {
   return new MajorCategory(id, header, hashcode, domain, userData);
 }
@@ -613,12 +618,12 @@ export function MidCategory_Api({
   domain,
   userData,
 }: {
-  id: number;
+  id?: number | null;
   headHashCode?: string | null;
-  header: string;
-  hashcode: string;
-  domain: string;
-  userData: string;
+  header?: string | null;
+  hashcode?: string | null;
+  domain?: string | null;
+  userData?: string | null;
 }): MidCategory {
   return new MidCategory(id, headHashCode, header, hashcode, domain, userData);
 }
@@ -635,12 +640,12 @@ export function MinorCategory_Api({
   img_url,
   content_json,
 }: {
-  id: number;
-  header: string;
+  id?: number | null;
+  header?: string | null;
   kid_header?: string | null;
-  hashcode: string;
-  domain: string;
-  userData: string;
+  hashcode?: string | null;
+  domain?: string | null;
+  userData?: string | null;
   img_url?: string | null;
   content_json?: string | null;
 }): MinorCategory {

@@ -1,13 +1,14 @@
 "use client";
 import Modal from "react-modal";
 import "../css/information_manager.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModalDetail from "./modal_manager_detail";
 import * as api_Manager from "../lib/information_state";
 import { ToastContainer, toast } from 'react-toastify';
 import { treeData as treeDataType } from './modal_manager_detail';
 
 import React from "react";
+import { isEqual } from "lodash";
 
 
 
@@ -36,7 +37,13 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
     const kidSelectRef = useRef<HTMLSelectElement>(null);
     const [ModalDetailbool, setDetail] = useState<boolean>(false);
     const [formOpen, setFormOpen] = useState<boolean>(false);
-    const [dataTree, setTree] = useState<treeDataType>();
+    const [dataCode, setCode] = useState<string>("");
+
+
+
+
+
+
 
 
 
@@ -347,9 +354,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
         setFormOpen(false);
     }
 
-    const showForm = (data: treeDataType) => {
+    const showForm = (data: string) => {
         setFormOpen(true);
-        setTree(data);
+        setCode(data);
     }
 
     return (<Modal
@@ -528,9 +535,9 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
                             {treeData?.map((item: any, index: number) => (
                                 (item.showbool) ? <li className="category-item">
-                                    <span className="category-name">{item.header}</span>
+                                    <span className="category-name">{item.header}</span> 
                                     <div className="actions">
-                                        <button id={item.id} onClick={() => showForm(item)} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={() => showForm(item.hashcode)} className="category-toggle-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
@@ -557,8 +564,8 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                                 (!item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button id={item.id} onClick={() => showForm(item)} className="category-toggle-btn">📖編輯內容</button>
-                                        <button id={item.id} onClick={(e) => stateMinorCategoty("show", item.hashcode, e)} className="category-toggle-hide-btn">👁️顯示</button>
+                                        <button id={item.id} onClick={() => showForm(item.hashcode)} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={(e) => stateMinorCategoty("show", item.hashcode, e)} className="category-toggle-view-btn">👁️顯示</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
                                 </li> : ""
@@ -573,7 +580,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
 
             </div>
         </div>
-        <ModalDetail isClose={isCloseForm} fetch_Information={fetch_Information} errorAlert={errorAlert} successAlert={successAlert} isOpen={formOpen} domain={domain} treeData={dataTree} />
+        <ModalDetail isClose={isCloseForm} fetch_Information={fetch_Information} errorAlert={errorAlert} successAlert={successAlert} isOpen={formOpen} domain={domain} treeArrayData={treeData} dataCode={dataCode}  />
 
 
         <ToastContainer />

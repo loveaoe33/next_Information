@@ -360,19 +360,17 @@ export class MinorCategory implements Category {
   private create_date?: string | null;
   private create_name?: string | null;
   private focus_number?: number | null;
-  private img_url?: string | null;
   private showbool?: Boolean | null;
   private content_json?: string | null;
   private domain?: string | null;
   private userData?: string | null;
-  constructor(id: number | undefined | null, header?: string | null, kid_header?: string | null, hashcode?: string | null, domain?: string | null, userData?: string | null, img_url?: string | null, content_json?: string | null) {
+  constructor(id: number | undefined | null, header?: string | null, kid_header?: string | null, hashcode?: string | null, domain?: string | null, userData?: string | null, content_json?: string | null) {
     this.id = id;
     this.header = header;
     this.kid_header = kid_header;
     this.hashcode = hashcode;
     this.userData = userData;
     this.domain = domain;
-    this.img_url = img_url;
     this.content_json = content_json;
   }
   fetchs = async (): Promise<[]> => {
@@ -452,7 +450,6 @@ export class MinorCategory implements Category {
           hashcode: this.hashcode,
           domainUrl: this.domain,
           userData: this.userData,
-          img_url:this.img_url,
           content_json: this.content_json,
 
         }),
@@ -538,7 +535,6 @@ export class MinorCategory implements Category {
       create_date: this.create_date,
       create_name: this.create_name,
       focus_number: this.focus_number,
-      img_url: this.img_url,
       content_json: this.content_json,
     }
   }
@@ -637,7 +633,6 @@ export function MinorCategory_Api({
   hashcode,
   domain,
   userData,
-  img_url,
   content_json,
 }: {
   id?: number | null;
@@ -646,9 +641,8 @@ export function MinorCategory_Api({
   hashcode?: string | null;
   domain?: string | null;
   userData?: string | null;
-  img_url?: string | null;
   content_json?: string | null;
 }): MinorCategory {
-  return new MinorCategory(id, header, kid_header, hashcode, domain, userData, img_url, content_json);
+  return new MinorCategory(id, header, kid_header, hashcode, domain, userData, content_json);
 }
 

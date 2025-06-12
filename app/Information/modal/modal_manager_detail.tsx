@@ -18,7 +18,8 @@ type product = {
     successAlert: (message: string) => void;
     isOpen: boolean;
     domain: string;
-    treeData?: treeData | null;
+    treeArrayData?: any[] | null;
+    dataCode?: string | null;
 }
 
 export type treeData = {
@@ -27,7 +28,6 @@ export type treeData = {
     kid_header?: string | null;
     hashcode?: string | null;
     focus_number?: number | null;
-    img_url?: string | null;
     showbool?: boolean | null;
     content_json?: string | null;
 }
@@ -38,10 +38,11 @@ export type treeContent = {
     product_Specification?: string | null;
     product_Price?: number | null;
     product_Remark?: string | null;
+    product_ImgUrl?: string | null;
     jsonCode: string;
 }
 
-const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpen, domain, treeData }: product) => {
+const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpen, domain, treeArrayData, dataCode }: product) => {
 
 
     const initialTreeObject: treeContent = {
@@ -50,13 +51,16 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
         product_Specification: "",
         product_Price: 0,
         product_Remark: "",
+        product_ImgUrl: "",
         jsonCode: "",
     };
-    const prevRef = useRef(treeData);
-
+    const prevRef = useRef(treeArrayData);
+    const prefCode = useRef(dataCode);
+    const [treeData, setTreeData] = useState<treeData>();
     const [treeObject, setTree] = useState<treeContent>(initialTreeObject)
+    const [updateBtn, setUpdateBtn] = useState<boolean>(false);
 
-    const [treeImgUrl, setImgUrl] = useState<string>("");
+
     const handleChange = (field: keyof treeContent, value: string | number): void => {
         setTree((prev) => ({
             ...prev,
@@ -65,18 +69,45 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 
     }
 
+    // 正確寫法（監聽變化）
+    useEffect(() => {
+        if (!isOpen) {
+            changeCode();
+        }
 
-    useEffect(() => {  //when mount
-        changeCode();
+        const current = treeArrayData;
+        if (!isEqual(prevRef.current, current)) {
+            prevRef.current = current;
+            treeDataSelect();
 
-        return () => {
-            console.log("❌ useEffect Cleanup");
-        };
-    }, [])
+            console.log("Tree資料有更新");
+        } else {
+            console.log("Tree資料無更新");
+
+        }
+    }, [treeArrayData, isOpen])
+
+    // 正確寫法（監聽變化）
+    useEffect(() => {
+
+
+        const current = dataCode;
+        if (!isEqual(prefCode.current, current)) {
+            prefCode.current = current;
+            treeDataSelect();
+
+            console.log("Code資料有更新");
+        } else {
+            console.log("Code資料無更新");
+
+        }
+    }, [dataCode])
+
+
 
     const changeCode = (): void => {
         setTree(initialTreeObject);
-        setImgUrl("");
+        setUpdateBtn(false);
         setTree((prev) => ({
             ...prev,
             jsonCode: nanoid(8), // 使用 nanoid 生成唯一識別碼
@@ -84,17 +115,13 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
     }
 
 
-    // 正確寫法（監聽變化）
-    useEffect(() => {
-        const current = treeData;
-        if (!isEqual(prevRef.current, current)) {
-            prevRef.current = current;
-            console.log("Tree資料有更新");
-        } else {
-            console.log("Tree資料無更新");
 
-        }
-    }, [treeData])
+
+
+    const treeDataSelect = (): void => {
+        const targetItem = treeArrayData?.find((item: any) => item.hashcode === dataCode);
+        setTreeData(targetItem);
+    }
 
 
 
@@ -127,6 +154,29 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
         }
     }
 
+    const printContent = (item: treeContent): void => {
+
+        if (item !== undefined && item.jsonCode != undefined && item.jsonCode != null) {
+
+            setTree({
+                product_Header: item.product_Header ?? "",
+                product_Introduction: item.product_Introduction ?? "",
+                product_Specification: item.product_Specification ?? "",
+                product_Price: item.product_Price ?? 0,
+                product_Remark: item.product_Remark ?? "",
+                jsonCode: item.jsonCode ?? "",
+                product_ImgUrl: item.product_ImgUrl ?? "",
+            });
+            setUpdateBtn(true);
+            return;
+        } else {
+
+            errorAlert("資料帶出錯誤，請聯繫專員!");
+
+        }
+
+    }
+
     const updateMinorCategory = async (id: number | undefined | null, hashcode: string | undefined | null, data: string | undefined | null): Promise<void> => {
         const api: Category = MinorCategory_Api({
             id: id,
@@ -134,7 +184,6 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
             hashcode: hashcode,
             domain,
             userData: "1,loveaoe33,456,0",
-            img_url: treeImgUrl,
             content_json: data,
             // img_url 和 content_json 是 optional，可以不寫
         });
@@ -167,20 +216,20 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
             errorAlert("JSON資料解析錯誤，請聯繫專員!");
             jsonArray = []; // fallback
         }
-        console.log("jsonArray1:", jsonArray,"hashCode:", jsonCode);
+        console.log("jsonArray1:", jsonArray, "hashCode:", jsonCode);
         if (caseSelect == "insert") {
             jsonArray.push(treeObject);
             /*call insert api*/
         }
         else if (caseSelect == "update") {
 
-            // jsonArray = jsonArray.map(item => item.hashCode === hashCode ? { treeObject } : item)
+            jsonArray = jsonArray.map(item => item.jsonCode === jsonCode ? { ...treeObject } : item)
 
             /*call update api*/
         } else if (caseSelect == "delete") {
 
             jsonArray = jsonArray.filter(item => item.jsonCode !== jsonCode);
-            /*call delete api*/ 
+            /*call delete api*/
 
         }
         console.log("jsonArray2:", jsonArray);
@@ -254,7 +303,7 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 
                     <div>
                         <label>圖片網址</label>
-                        <input type="text" value={treeImgUrl ?? ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImgUrl(e.target.value)} placeholder="輸入圖片網址" />
+                        <input type="text" value={treeObject.product_ImgUrl ?? ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("product_ImgUrl", e.target.value)} placeholder="輸入圖片網址" />
                     </div>
 
                     <div>
@@ -270,6 +319,7 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 
                     <div>
                         <label>商品分類清單</label>
+                        {treeData?.content_json}
                         <ul id="category-list">
                             {JSON.parse(treeData?.content_json || "[]").map((item: treeContent, index: number) => {
                                 return (
@@ -277,11 +327,13 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 
                                         <span className="category-name">{item.product_Header}</span>
                                         <div className="actions">
-                                            <button type="button" id={item.jsonCode} onClick={(e) => { postConten("update", treeData?.id,treeData?.hashcode,item?.jsonCode) }} className="category-toggle-bring-btn">帶出資訊</button>
-                                            <button type="button" id={item.jsonCode} onClick={(e) => { postConten("delete", treeData?.id,treeData?.hashcode,item?.jsonCode) }} className="category-delete-btn">刪除</button>
+                                            <button type="button" id={item.jsonCode} onClick={(e) => { printContent(item) }} className="category-toggle-bring-btn">帶出資訊</button>
+                                            <button type="button" id={item.jsonCode} disabled={!updateBtn} className={ !updateBtn?'updateBtn-disable':'updateBtn-active'}  onClick={(e) => { postConten("update", treeData?.id, treeData?.hashcode, item?.jsonCode) }}>更新</button>
+                                            <button type="button" id={item.jsonCode} onClick={(e) => { postConten("delete", treeData?.id, treeData?.hashcode, item?.jsonCode) }} className="category-delete-btn">刪除</button>
                                         </div>
                                     </li>
                                 )
+
                             })}
                         </ul>
                     </div>
@@ -298,6 +350,6 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
     );
 };
 
-export default React.memo(ModalView);;
+export default React.memo(ModalView);
 
 

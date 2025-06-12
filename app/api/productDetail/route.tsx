@@ -151,7 +151,6 @@ export async function PUT(request: Request) {  //update content
         hashcode: hashcode,
         userString: userData,
         content_json: content_json,
-        img_url: img_url,
       })
 
     });

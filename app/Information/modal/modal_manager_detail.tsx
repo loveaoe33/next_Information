@@ -319,7 +319,6 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 
                     <div>
                         <label>商品分類清單</label>
-                        {treeData?.content_json}
                         <ul id="category-list">
                             {JSON.parse(treeData?.content_json || "[]").map((item: treeContent, index: number) => {
                                 return (

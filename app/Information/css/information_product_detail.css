@@ -79,17 +79,94 @@
       gap: 8px;
     }
 
+
+  .updateBtn-disable{
+  background-color: #ccc;         /* 淺灰色背景 */
+  color: #777;                    /* 字體也偏灰 */
+  border: 1px solid #aaa;         /* 灰色邊框 */
+  cursor: not-allowed;           /* 滑鼠顯示禁止符號 */
+  opacity: 0.6;                  /* 稍微透明化 */
+  pointer-events: none;         /* 禁用點擊事件 */
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+
+
+}
+
+.updateBtn-active{
+  background-color: #098de5;     /* 藍色背景 */
+  color: #fff;                   /* 白色字體 */
+  border: 1px solid #0056b3;     /* 深藍色邊框 */
+  cursor: pointer;               /* 滑鼠變成手指 */
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: bold;
+        font-size: 0.9rem;
+
+      transition: background-color 0.2s, color 0.2s;
+
+
+
+
+}
+
+
+.updateBtn-active:hover {
+  background-color: #0056b3;     /* 滑過時顏色更深 */
+}
+
+
+    
     .category-toggle-view-btn,
     .category-toggle-hide-btn,
     .category-delete-btn,
     .submit-btn {
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
+   background-color: #098de5;     /* 藍色背景 */
+  color: #fff;                   /* 白色字體 */
+  border: 1px solid #0056b3;     /* 深藍色邊框 */
+  cursor: pointer;               /* 滑鼠變成手指 */
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: bold;
+        font-size: 0.9rem;
+
       transition: background-color 0.2s, color 0.2s;
     }
+
+.category-toggle-edit-btn {
+  background-color: #007bff;       /* 藍色背景，常用於「編輯」 */
+  color: white;
+  border: none;
+  padding: 6px 12px;  
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.category-toggle-edit-btn:hover {
+  background-color: #0056b3;       /* hover 時更深的藍色 */
+}
+
+
+.category-toggle-bring-btn {
+    background-color: #06ec0e;     /* 藍色背景 */
+  color: #fff;                   /* 白色字體 */
+  border: 1px solid #0056b3;     /* 深藍色邊框 */
+  cursor: pointer;               /* 滑鼠變成手指 */
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: bold;
+        font-size: 0.9rem;
+
+      transition: background-color 0.2s, color 0.2s;
+}
+
+.category-toggle-bring-btn:hover {
+  background-color: #218838;        /* hover 時更深的綠色 */
+}
 
     .category-toggle-view-btn {
       background-color: #4caf50;

@@ -537,7 +537,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                                 (item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span> 
                                     <div className="actions">
-                                        <button id={item.id} onClick={() => showForm(item.hashcode)} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={() => showForm(item.hashcode)} className="category-toggle-edit-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("hide", item.hashcode, e)} className="category-toggle-hide-btn">👁️隱藏</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>
@@ -564,7 +564,7 @@ const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, tr
                                 (!item.showbool) ? <li className="category-item">
                                     <span className="category-name">{item.header}</span>
                                     <div className="actions">
-                                        <button id={item.id} onClick={() => showForm(item.hashcode)} className="category-toggle-btn">📖編輯內容</button>
+                                        <button id={item.id} onClick={() => showForm(item.hashcode)} className="category-toggle-edit-btn">📖編輯內容</button>
                                         <button id={item.id} onClick={(e) => stateMinorCategoty("show", item.hashcode, e)} className="category-toggle-view-btn">👁️顯示</button>
                                         <button id={item.id} onClick={(e) => deleteMinorCategory(item.hashcode, e)} className="category-delete-btn" >🗑️刪除</button>
                                     </div>

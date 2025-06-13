@@ -158,19 +158,6 @@ text-decoration: line-through;
 display: flex;
 gap: 5px;
 }
-.category-toggle-modal-btn {
-background-color: #74ee48;
-}
 
-.category-toggle-hide-btn {
-background-color: #ab1cee;
-}
 
-.category-toggle-view-btn {
-background-color: #ffc107;
-}
 
-.category-delete-btn {
-background-color: #dc3545;
-color: white;
-}

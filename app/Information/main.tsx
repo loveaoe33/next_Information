@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import "./css/information_main.css"
 import Template_Md from "./template_md";
@@ -125,7 +126,7 @@ export default function main() {
         }).fetchs();
 
 
-        const parsed:any[] = head.res.externalData.map((str: string) => {
+        const parsed: any[] = head.res.externalData.map((str: string) => {
             try {
                 return JSON.parse(str);
             } catch (e) {
@@ -146,7 +147,7 @@ export default function main() {
             domain,
             userData: "",
         }).fetchs();
-        const parsed:any[] = kid.res.externalData.map((str: string) => {
+        const parsed: any[] = kid.res.externalData.map((str: string) => {
             try {
                 return JSON.parse(str);
             } catch (e) {
@@ -168,7 +169,7 @@ export default function main() {
             domain,
             userData: "",
         }).fetchs();
-        const parsed:any[] = tree.res.externalData.map((str: string) => {
+        const parsed: any[] = tree.res.externalData.map((str: string) => {
             try {
                 return JSON.parse(str);
             } catch (e) {
@@ -265,7 +266,90 @@ export default function main() {
                     <h2>選單</h2>
                     <div className="main-toggle-btn" onClick={toggleSidebar}>≡</div>
 
-                    <div className="menu-item" onClick={(e) => toggleMenu("0")}>💊藥品/保健品服務展示</div>
+                    {headData?.map((item, headIndex) => {
+                        // 過濾出這個 head 對應的 kid
+                        const relatedKids: any[] = kidData?.filter(kid => kid.father_header === item.hashcode) || [];
+
+
+                        if (item.showbool === true) {
+                            return (
+
+                                <React.Fragment key={item.hashcode || headIndex}>
+                                    {/* 第一層：menu item */}
+                                    <div
+                                        className="menu-item"
+                                        id={`menu-item-${headIndex}`}
+                                        onClick={() => toggleMenu(headIndex.toString())}
+                                    >
+                                        {item.header}
+                                    </div>
+                                    <div className="submenu-item-kid" id={`submenu-item-kid-${headIndex}`}>
+
+
+
+
+                                        {kidData?.filter((kidData) => kidData.father_header === item.hashcode).map((kidItem, kidIndex) => {
+                                            // 過濾出這個 head 對應的 kid
+
+
+                                            if (kidItem.showbool === true) {
+
+                                                return (
+
+                                                    <React.Fragment key={kidItem.hashcode || kidIndex}>
+                                                        {/* 第一層：menu item */}
+                                                        <div
+                                                            className="submenu-item-tree"
+                                                            id={`submenu-item-tree-${kidIndex}`}
+                                                        >
+                                                            {kidItem.header}
+                                                        </div>
+                                                    </React.Fragment>
+                                                );
+                                            }
+                                        })}
+
+                                    </div>
+                                </React.Fragment>
+                            );
+
+                        }
+
+
+
+
+
+
+                    })}
+
+
+
+
+
+
+
+                    {/* 
+                                {relatedKids.map((kid, kidIndex) => (
+                                    <div
+                                        className="submenu-item-kid"
+                                        id={`submenu-item-kid-${index}`}
+                                        key={kid.hashcode || kidIndex}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // toggleTree(kidIndex.toString());
+                                        }}
+                                    >
+                                        {kid.header}
+                                    </div>
+                                ))} */}
+
+
+
+
+
+
+
+                    {/* <div className="menu-item" onClick={(e) => toggleMenu("0")}>💊藥品/保健品服務展示</div>
                     <div className="submenu-item-kid" id="submenu-item-kid-0" onClick={(e) => toggleTree("0")}>
 
                         <div className="submenu-item-tree" onClick={(e) => toggleDetail("0")}>子類別1
@@ -281,9 +365,13 @@ export default function main() {
                                 <button className="submenu-item-button">👨‍💼使用者管理</button>
                             </div>
                         </div>
+                    </div> */}
 
 
-                    </div>
+
+
+
+
 
                     <div className="menu-item" onClick={(e) => toggleMenu("5")}>⚙️管理者項目維護</div>
                     <div className="submenu-item-kid" id="submenu-item-kid-5" onClick={(e) => toggleTree("5")}>

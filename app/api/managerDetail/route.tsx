@@ -1,5 +1,13 @@
 import { NextResponse } from 'next/server';
 
+interface RequestBody {
+  id: string;
+  hashcode: string;
+  domainUrl: string;
+  header: any;
+  userData: any;
+}
+
 // GET Method
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -14,19 +22,31 @@ export async function GET(request: Request) {
 }
 
 // POST Method
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const response = {
-      message: 'This is a POST response',
-      receivedData: body,
-      timestamp: new Date().toISOString()
-    };
+export async function POST(request: Request) {   //insert data
 
-    return NextResponse.json(response, { status: 201 });
+  try {
+    const body = await request.json();   //呼叫時會丟json過來
+    const { id, hashcode, domainUrl, header, userData }: RequestBody = body;
+    console.log("url:" + domainUrl);
+    const response = await fetch(`${domainUrl}/Product_Imformation/setProduct_Information?caseSelect=marjorCase`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: "Head",
+        id: id,
+        hashcode: hashcode,
+        header: header,
+        userString: userData,
+      })
+    });
+    const data: string = await response.text();
+    // return NextResponse.json(data, { status: 201 });
+    if (!response.ok) throw new Error('Insert API失敗了')
+    return NextResponse.json({ method: 'POST', sucess: true, message: '新增資料成功', res: data })
+
   } catch (error) {
     return NextResponse.json(
-      { error: 'Invalid JSON format' },
+      { error: (error as Error).message },
       { status: 400 }
     );
   }

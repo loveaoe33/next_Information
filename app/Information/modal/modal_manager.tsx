@@ -21,6 +21,7 @@ interface LoginCheck {
     jwtoken: string;
     leve: number;
     title: string;
+    domain: string;
     headerData: any[] | undefined | null;
     kidData: any[] | undefined | null;
     treeData: any[] | undefined | null;
@@ -28,8 +29,7 @@ interface LoginCheck {
 
 
 
-const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, treeData, title, account, jwtoken, leve }: LoginCheck) => {
-    const [domain, setDomain] = useState<string>('http://localhost:8080');
+const modalView = ({ isClose, isOpen, fetch_Information, headerData, kidData, treeData, title,domain, account, jwtoken, leve }: LoginCheck) => {
     const [MajorItem, setMajor] = useState<string>("");
     const [MidItem, setMid] = useState<string>("");
     const [MinorItem, setMinor] = useState<string>("");

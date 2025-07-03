@@ -116,6 +116,9 @@ export default function main() {
         setLoginOpent(false);
     }
 
+
+
+
     const fetch_headInformation = async (): Promise<void> => {
         const head: any = await api_Manager.MajorCategory_Api({
             id: 0,
@@ -208,7 +211,9 @@ export default function main() {
         //   setTree(tree);
     }
 
-    const combine_Informatoin = (): void => {
+    const show_Informatoins = (): void => {
+
+
     }
 
     const isCloseAdmin = (): void => {
@@ -400,11 +405,9 @@ export default function main() {
                         <span className="span-account">用戶資訊:</span>
                         <button className="main-login-btn" onClick={() => setLoginOpent(true)}>登入</button>
                     </div>
-
+                    { <ModalLogin isClose={isCloseLogin} isOpen={isOpenLogin} title="登入" domain={domain}   account={loginAccount} password={""} jwtoken={""} />}
                     {/* {templateMap.get("template_Admin") && (headData) ? <ModalDetail isClose={isCloseLogin} isOpen={isOpenLogin} title="管理者登入" account={""} password={""} jwtoken={""} /> : <Template_Md />} */}
-
-                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""} account={""} jwtoken={""} leve={0} /> : <Template_Md />}
-
+                    {templateMap.get("template_Admin") && (headData) ? <ModalAdmin isClose={isCloseAdmin} fetch_Information={fetch_Information} isOpen={isOpenAdmin} headerData={headData} kidData={kidData} treeData={treeData} title={""}  domain={domain}  account={""} jwtoken={""} leve={0} /> : <Template_Md treeData={treeData} />}
                 </div>
 
             </div>

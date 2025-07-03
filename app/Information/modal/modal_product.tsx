@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import Modal from "react-modal";
 import Image from "next/image";
 import "../css/information_product.css";
+import { treeData } from "../modal/modal_manager_detail"
+import { treeContent } from "../modal/modal_manager_detail";
 
 
 // 修正拼寫為 ModalViewProps，並添加 children（可選）
@@ -11,30 +13,62 @@ interface ModalViewProps {
   isClose: () => void;
   isOpen: boolean;
   title: string;
-  children?: string  | null; // 可為undefind或null
+  children?: string | null; // 可為undefind或null
+  treeData?: treeData | null;
+}
+
+
+type renderResult = {
+  status: "empty" | "notReady" | "error" | "success";
+  data?: treeContent;
+  message?: string;
 }
 
 const viewAlert = () => {
   alert("DDD");
 };
 
+
+
 // ModalView 組件
-const modalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
+const modalView = ({ isClose, isOpen, title, children, treeData }: ModalViewProps) => {
   if (!isOpen) return null;
 
   // 可選擇性地在 Modal 打開時調用 viewAlert
   // viewAlert(); // 如果你希望每次 Modal 打開時彈出 alert，取消這行註解
 
+
+
+  const renderContent = (contentJson: string | null): renderResult => {
+    try {
+      if (!contentJson || contentJson.trim() === "") {          
+        return { status: "notReady", message: "資料尚未準備好" };
+      }
+      const parsed = JSON.parse(contentJson);
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        return { status: "empty", message: "資料為空" };
+      }
+      const content = parsed[0] as treeContent;
+      // 假設成功時返回如下
+      return { status: "success", data: content};
+    } catch (e) {
+      return { status: "error", message: "解析資料時發生錯誤" };
+    }
+  }
+
+  const result = renderContent(treeData?.content_json || null);
+
+
   return (
     <Modal
-    isOpen={isOpen}
-    onRequestClose={isClose}
-    contentLabel={title}
-    ariaHideApp={false} // 在Next.js中，使用此配置来避免错误
-    preventScroll={false}
-  >
-  <div className="modal_product-body">
-    <button
+      isOpen={isOpen}
+      onRequestClose={isClose}
+      contentLabel={title}
+      ariaHideApp={false} // 在Next.js中，使用此配置来避免错误
+      preventScroll={false}
+    >
+      <div className="modal_product-body">
+        <button
           onClick={isClose}
           style={{
             position: 'absolute',
@@ -48,61 +82,68 @@ const modalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
           }}
         >
           ×
-        </button>  
-      <header className="navbar">
-        <div className="navbar-container">
+        </button>
+        <header className="navbar">
+          <div className="navbar-container">
             <h1>{title}</h1>
-        </div>
-    </header>
+          </div>
+        </header>
 
 
-    <section className="product-section">
-        <div className="product-container">
+        <section className="product-section">
+          <div className="product-container">
             <div className="product-image">
-                          <Image  src="https://i.imgur.com/sBHx3Wx.jpeg" width={300} height={200} alt="商品3"/>
-            
+              <Image src="https://i.imgur.com/sBHx3Wx.jpeg" width={300} height={200} alt="商品3" />
+
             </div>
+
+
+
             <div className="product-info">
-                <h2 className="product-title">商品名稱</h2>
-                <p className="product-description">這是一個非常精緻且受歡迎的商品，適合各種喜好的人群。它擁有出色的設計和高品質的材質。</p>
-                <div className="product-specs">
-                    <h3>商品規格</h3>
-                    <ul>
-                        <li>材質：優質塑料</li>
-                        <li>尺寸：20cm x 10cm</li>
-                        <li>顏色：紅色、藍色、綠色</li>
-                    </ul>
-                </div>
-                <div className="product-price">
-                    <p>價格：$999</p>
-                </div>
-                <div className="product-actions">
-                    <button className="add-to-cart">詢問專員</button>
-                    <button className="buy-now">立即購買</button>
-                    <button className="buy-now">記住項目</button>
-                </div>
+              <h2 className="product-title">{treeData?.header}</h2>
+              <p className="product-description">{result.data?.product_Introduction}</p>
+              <div className="product-specs">
+                <h3>商品規格</h3>
+                <ul>
+                  {result.data?.product_Specification}
+                  {/* <li>材質：優質塑料</li>
+                  <li>尺寸：20cm x 10cm</li>
+                  <li>顏色：紅色、藍色、綠色</li> */}
+                </ul>
+              </div>
+              <div className="product-price">
+                <p>價格：${result.data?.product_Price}</p>
+              </div>
+
+
+
+              <div className="product-actions">
+                <button className="add-to-cart">詢問專員</button>
+                <button className="buy-now">立即購買</button>
+                <button className="buy-now">記住項目</button>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
+        </section>
 
 
-    <hr className="separator"/>
-
-   
-    <section className="additional-content">
-        <h3>更多資訊</h3>
-        <p>這是更多的商品詳細資訊，可以放置更多的描述、使用方式、顧客評價等等。</p>
-        <p>這個區域可以隨著需要增加更多的內容，例如相關商品、FAQ等。</p>
-    </section>
+        <hr className="separator" />
 
 
-    <footer className="footer">
-        <div className="footer-content">
+        <section className="additional-content">
+          <h3>更多資訊</h3>
+          <p>這是更多的商品詳細資訊，可以放置更多的描述、使用方式、顧客評價等等。</p>
+          <p>這個區域可以隨著需要增加更多的內容，例如相關商品、FAQ等。</p>
+        </section>
+
+
+        <footer className="footer">
+          <div className="footer-content">
             <p>聯絡我們：bone.hosp@gmail.com</p>
-        </div>
-    </footer>
-  </div>
-     
+          </div>
+        </footer>
+      </div>
+
     </Modal>
   );
 };
@@ -128,4 +169,4 @@ const modalView = ({ isClose, isOpen, title, children }: ModalViewProps) => {
 // }
 
 
-export default modalView;
+export default React.memo(modalView);

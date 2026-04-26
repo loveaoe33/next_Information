@@ -1,45 +1,46 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React from "react";
 import Modal from "react-modal";
 import Image from "next/image";
 import "../css/information_product.css";
-import { treeData } from "../modal/modal_manager_detail"
-import { treeContent } from "../modal/modal_manager_detail";
+import { treeData, treeContent } from "./modal_manager_detail";
 
-
-// 修正拼寫為 ModalViewProps，並添加 children（可選）
-interface ModalViewProps {
+/**
+ * Props for the ModalProduct component.
+ */
+export interface ModalProductProps {
+  /** Function to close the modal. */
   isClose: () => void;
+  /** Boolean indicating whether the modal is open. */
   isOpen: boolean;
+  /** The title displayed on the modal. */
   title: string;
-  children?: string | null; // 可為undefind或null
+  /** The category tree data containing product details. */
   treeData?: treeData | null;
 }
 
-
-type renderResult = {
+/**
+ * Represents the status and data parsed from the product content JSON.
+ */
+export type RenderResult = {
   status: "empty" | "notReady" | "error" | "success";
   data?: treeContent;
   message?: string;
 }
 
-const viewAlert = () => {
-  alert("DDD");
-};
-
-
-
-// ModalView 組件
-const modalView = ({ isClose, isOpen, title, children, treeData }: ModalViewProps) => {
+/**
+ * Modal component for displaying detailed product information.
+ */
+const ModalProduct = ({ isClose, isOpen, title, treeData }: ModalProductProps) => {
   if (!isOpen) return null;
 
-  // 可選擇性地在 Modal 打開時調用 viewAlert
-  // viewAlert(); // 如果你希望每次 Modal 打開時彈出 alert，取消這行註解
-
-
-
-  const renderContent = (contentJson: string | null): renderResult => {
+  /**
+   * Parses the JSON content string into a RenderResult object.
+   * @param contentJson - The JSON string containing product content.
+   * @returns The parsed result status and data.
+   */
+  const renderContent = (contentJson: string | null): RenderResult => {
     try {
       if (!contentJson || contentJson.trim() === "") {          
         return { status: "notReady", message: "資料尚未準備好" };
@@ -49,22 +50,21 @@ const modalView = ({ isClose, isOpen, title, children, treeData }: ModalViewProp
         return { status: "empty", message: "資料為空" };
       }
       const content = parsed[0] as treeContent;
-      // 假設成功時返回如下
       return { status: "success", data: content};
     } catch (e) {
+      console.error("Failed to parse product content JSON:", e);
       return { status: "error", message: "解析資料時發生錯誤" };
     }
-  }
+  };
 
   const result = renderContent(treeData?.content_json || null);
-
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={isClose}
       contentLabel={title}
-      ariaHideApp={false} // 在Next.js中，使用此配置来避免错误
+      ariaHideApp={false} // Avoids errors in Next.js
       preventScroll={false}
     >
       <div className="modal_product-body">
@@ -149,24 +149,4 @@ const modalView = ({ isClose, isOpen, title, children, treeData }: ModalViewProp
 };
 
 
-// export default function view_modal(){
-// const [isModalOpen,setModalOpen]=useState(false);
-// return( 
-//     <div classNameName="flex flex-col items-center justify-center min-h-screen">
-//       <button 
-//         classNameName="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" 
-//         onClick={() => setModalOpen(true)}
-//       >
-//         打開 Modal
-//       </button>
-//       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="彈出視窗">
-//         <p>這是彈出視窗的內容。</p>
-//       </Modal>
-//     </div>
-
-// )
-
-// }
-
-
-export default React.memo(modalView);
+export default React.memo(ModalProduct);

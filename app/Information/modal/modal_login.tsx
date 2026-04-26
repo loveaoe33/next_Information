@@ -6,36 +6,33 @@ import Image from "next/image";
 import "../css/information_login.css";
 import { ToastContainer, toast } from 'react-toastify';
 
-
-// 修正拼寫為 ModalViewProps，並添加 children（可選）
-interface LoginAccount {
+/**
+ * Props for the Login Modal component.
+ */
+interface LoginAccountProps {
+  /** Function to close the modal. */
   isClose: () => void;
+  /** Boolean indicating whether the modal is open. */
   isOpen: boolean;
+  /** The domain associated with the login request. */
   domain: string;
-  account: string;
-  password: string;
-  jwtoken: string;
+  /** The title displayed on the modal. */
   title: string;
 }
 
-const viewAlert = () => {
-  alert("DDD");
-};
-
-
-
-// ModalView 組件
-const modalView = ({ isClose, isOpen, title, domain }: LoginAccount) => {
-
-
+/**
+ * Modal component for handling user login.
+ */
+const modalView = ({ isClose, isOpen, title, domain }: LoginAccountProps) => {
 
   if (!isOpen) return null;
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-  // 可選擇性地在 Modal 打開時調用 viewAlert
-  // viewAlert(); // 如果你希望每次 Modal 打開時彈出 alert，取消這行註解
 
-
+  /**
+   * Displays an error alert notification.
+   * @param message - The error message to display.
+   */
   const errorAlert = (message: string): void => {
     toast.error(message, {
       position: "top-right",
@@ -48,7 +45,10 @@ const modalView = ({ isClose, isOpen, title, domain }: LoginAccount) => {
     });
   };
 
-
+  /**
+   * Displays a success alert notification.
+   * @param message - The success message to display.
+   */
   const successAlert = (message: string): void => {
     toast.success(message, {
       position: "top-right",
@@ -61,6 +61,10 @@ const modalView = ({ isClose, isOpen, title, domain }: LoginAccount) => {
     });
   };
 
+  /**
+   * Handles the login button click event.
+   * Sends the account and password to the server for authentication.
+   */
   const loginBtn = async (): Promise<string> => {
     try {
       const res = await fetch("/api/adminLogin", {
@@ -85,23 +89,24 @@ const modalView = ({ isClose, isOpen, title, domain }: LoginAccount) => {
       console.log("loginAdmin result:", result);
       if (result.res === "account none exist") {
         errorAlert("帳號或密碼錯誤，請確認後重新輸入");
-      }
-      else if (result.res === "account password error") {
+      } else if (result.res === "account password error") {
         errorAlert("密碼驗證錯誤，請確認後重新輸入");
       } else {
-
-        const data=result.res.JSON();
-        successAlert("登入成功，歡迎回來！"+data.account);
-
+        // Handle parsing carefully as standard objects do not have a .JSON() method
+        try {
+          const data = typeof result.res === 'string' ? JSON.parse(result.res) : result.res;
+          successAlert("登入成功，歡迎回來！" + (data.account || account));
+        } catch (e) {
+          successAlert("登入成功，歡迎回來！" + account);
+        }
       }
 
       return result.res;
     } catch (err) {
-      alert(err);
-      return "loginAdmin none connetcion";
+      console.error(err);
+      return "loginAdmin connection error";
     }
-
-  }
+  };
 
   return (
     <Modal
@@ -147,26 +152,6 @@ const modalView = ({ isClose, isOpen, title, domain }: LoginAccount) => {
     </Modal>
   );
 };
-
-
-// export default function view_modal(){
-// const [isModalOpen,setModalOpen]=useState(false);
-// return( 
-//     <div classNameName="flex flex-col items-center justify-center min-h-screen">
-//       <button 
-//         classNameName="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" 
-//         onClick={() => setModalOpen(true)}
-//       >
-//         打開 Modal
-//       </button>
-//       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="彈出視窗">
-//         <p>這是彈出視窗的內容。</p>
-//       </Modal>
-//     </div>
-
-// )
-
-// }
 
 
 export default modalView;

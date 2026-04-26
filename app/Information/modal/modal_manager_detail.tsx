@@ -6,22 +6,32 @@ import Image from 'next/image';
 import { Category, MinorCategory_Api } from "../lib/information_state";
 import '../css/information_product_detail.css';
 import { nanoid } from 'nanoid'
-import { initialize } from "next/dist/server/lib/render-server";
 import React from "react";
 import { isEqual } from "lodash";
 
-
-type product = {
+/**
+ * Props for the ModalDetail component.
+ */
+export interface ModalDetailProps {
+    /** Function to close the modal. */
     isClose: () => void;
+    /** Function to re-fetch category information. */
     fetch_Information: (caseSelect: string) => Promise<void>;
+    /** Displays an error alert. */
     errorAlert: (message: string) => void;
+    /** Displays a success alert. */
     successAlert: (message: string) => void;
+    /** Boolean indicating whether the modal is open. */
     isOpen: boolean;
+    /** Domain context for API requests. */
     domain: string;
+    /** Array of all tree category data. */
     treeArrayData?: any[] | null;
+    /** The specific target data code (hashcode) to display. */
     dataCode?: string | null;
 }
 
+/** Represents a tree category item. */
 export type treeData = {
     id?: number | null;
     header?: string | null;
@@ -32,6 +42,7 @@ export type treeData = {
     content_json?: string | null;
 }
 
+/** Represents the detailed content of a specific product. */
 export type treeContent = {
     product_Header?: string | null;
     product_Introduction?: string | null;
@@ -42,43 +53,47 @@ export type treeContent = {
     jsonCode: string;
 }
 
-const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpen, domain, treeArrayData, dataCode }: product) => {
+/** Initial state for a new product content object. */
+const initialTreeObject: treeContent = {
+    product_Header: "",
+    product_Introduction: "",
+    product_Specification: "",
+    product_Price: 0,
+    product_Remark: "",
+    product_ImgUrl: "",
+    jsonCode: "",
+};
 
+const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpen, domain, treeArrayData, dataCode }: ModalDetailProps) => {
 
-    const initialTreeObject: treeContent = {
-        product_Header: "",
-        product_Introduction: "",
-        product_Specification: "",
-        product_Price: 0,
-        product_Remark: "",
-        product_ImgUrl: "",
-        jsonCode: "",
-    };
-    const prevRef = useRef(treeArrayData);
-    const prefCode = useRef(dataCode);
+    const prevTreeDataRef = useRef(treeArrayData);
+    const prevDataCodeRef = useRef(dataCode);
     const [treeData, setTreeData] = useState<treeData>();
     const [treeObject, setTree] = useState<treeContent>(initialTreeObject)
     const [updateBtn, setUpdateBtn] = useState<boolean>(false);
 
-
+    /**
+     * Handles input changes for the tree content form.
+     * @param field - The field name to update.
+     * @param value - The new value for the field.
+     */
     const handleChange = (field: keyof treeContent, value: string | number): void => {
         setTree((prev) => ({
             ...prev,
             [field]: value,
         }));
-
     }
 
-    // 正確寫法（監聽變化）
+    // Monitor changes in tree array data
     useEffect(() => {
         if (!isOpen) {
-            changeCode();
+            resetFormCode();
         }
 
         const current = treeArrayData;
-        if (!isEqual(prevRef.current, current)) {
-            prevRef.current = current;
-            treeDataSelect();
+        if (!isEqual(prevTreeDataRef.current, current)) {
+            prevTreeDataRef.current = current;
+            updateSelectedTreeData();
 
             console.log("Tree資料有更新");
         } else {
@@ -87,14 +102,12 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
         }
     }, [treeArrayData, isOpen])
 
-    // 正確寫法（監聽變化）
+    // Monitor changes in data code
     useEffect(() => {
-
-
         const current = dataCode;
-        if (!isEqual(prefCode.current, current)) {
-            prefCode.current = current;
-            treeDataSelect();
+        if (!isEqual(prevDataCodeRef.current, current)) {
+            prevDataCodeRef.current = current;
+            updateSelectedTreeData();
 
             console.log("Code資料有更新");
         } else {
@@ -104,40 +117,41 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
     }, [dataCode])
 
 
-
-    const changeCode = (): void => {
+    /**
+     * Resets the form and generates a new unique JSON code for a new entry.
+     */
+    const resetFormCode = (): void => {
         setTree(initialTreeObject);
         setUpdateBtn(false);
         setTree((prev) => ({
             ...prev,
-            jsonCode: nanoid(8), // 使用 nanoid 生成唯一識別碼
+            jsonCode: nanoid(8), 
         }));
     }
 
-
-
-
-
-    const treeDataSelect = (): void => {
+    /**
+     * Updates the current treeData object based on the matching dataCode.
+     */
+    const updateSelectedTreeData = (): void => {
         const targetItem = treeArrayData?.find((item: any) => item.hashcode === dataCode);
         setTreeData(targetItem);
     }
 
-
-
-
-    const contenCheck = (): boolean => {
-
-        const vaildations = [
-            { conditioin: !treeObject.product_Header, message: "資料驗證失敗，抬頭不可為空!" },
-            { conditioin: !treeObject.product_Introduction, message: "資料驗證失敗，介紹不可為空!" },
-            { conditioin: !treeObject.product_Specification, message: "資料驗證失敗，註記不可為空!" },
-            { conditioin: !treeObject.product_Price, message: "資料驗證失敗，金額不可為空!" },
-            { conditioin: !treeObject.jsonCode, message: "資料驗證失敗，識別碼產生錯誤!" }
-
+    /**
+     * Validates the form content before submission.
+     * @returns boolean indicating whether the validation passed.
+     */
+    const validateContent = (): boolean => {
+        const validations = [
+            { condition: !treeObject.product_Header, message: "資料驗證失敗，抬頭不可為空!" },
+            { condition: !treeObject.product_Introduction, message: "資料驗證失敗，介紹不可為空!" },
+            { condition: !treeObject.product_Specification, message: "資料驗證失敗，註記不可為空!" },
+            { condition: !treeObject.product_Price, message: "資料驗證失敗，金額不可為空!" },
+            { condition: !treeObject.jsonCode, message: "資料驗證失敗，識別碼產生錯誤!" }
         ]
-        for (const { conditioin, message } of vaildations) {
-            if (conditioin) {
+        
+        for (const { condition, message } of validations) {
+            if (condition) {
                 errorAlert(message);
                 return false;
             }
@@ -146,18 +160,22 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
         return true;
     }
 
-    const postConten = (caseSelect?: string | null, id?: number | null, hashcode?: string | null, jsoncode?: string | null): void => {
-
-        if (caseSelect === "update" || caseSelect === "delete" || contenCheck()) {
-            const newJson = jsonContent(caseSelect, jsoncode);
+    /**
+     * Handles insert, update, or delete operations for the tree content.
+     */
+    const handleContentSubmit = (action?: string | null, id?: number | null, hashcode?: string | null, jsoncode?: string | null): void => {
+        if (action === "update" || action === "delete" || validateContent()) {
+            const newJson = generateUpdatedJson(action, jsoncode);
             updateMinorCategory(id, hashcode, newJson);
         }
     }
 
-    const printContent = (item: treeContent): void => {
-
+    /**
+     * Loads the selected tree content item into the form for editing.
+     * @param item - The selected tree content item.
+     */
+    const loadContentToForm = (item: treeContent): void => {
         if (item !== undefined && item.jsonCode != undefined && item.jsonCode != null) {
-
             setTree({
                 product_Header: item.product_Header ?? "",
                 product_Introduction: item.product_Introduction ?? "",
@@ -170,13 +188,13 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
             setUpdateBtn(true);
             return;
         } else {
-
             errorAlert("資料帶出錯誤，請聯繫專員!");
-
         }
-
     }
 
+    /**
+     * Makes the API request to update the Minor Category JSON data.
+     */
     const updateMinorCategory = async (id: number | undefined | null, hashcode: string | undefined | null, data: string | undefined | null): Promise<void> => {
         const api: Category = MinorCategory_Api({
             id: id,
@@ -196,7 +214,7 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
             case "sucess":
                 successAlert("更新成功!");
                 fetch_Information("treeCase");
-                changeCode();
+                resetFormCode();
                 break;
             case "fail":
                 errorAlert("更新失敗，請聯繫專員!");
@@ -207,38 +225,30 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
         }
     }
 
-
-    const jsonContent = (caseSelect?: string | null, jsonCode?: string | null): string => {
+    /**
+     * Generates a new JSON string representation of the tree content based on the given action.
+     */
+    const generateUpdatedJson = (action?: string | null, jsonCode?: string | null): string => {
         let jsonArray: treeContent[] = [];
         try {
             jsonArray = JSON.parse(treeData?.content_json ?? "[]");
         } catch (error) {
+            console.error(error);
             errorAlert("JSON資料解析錯誤，請聯繫專員!");
             jsonArray = []; // fallback
         }
-        console.log("jsonArray1:", jsonArray, "hashCode:", jsonCode);
-        if (caseSelect == "insert") {
+        
+        if (action == "insert") {
             jsonArray.push(treeObject);
-            /*call insert api*/
-        }
-        else if (caseSelect == "update") {
-
+        } else if (action == "update") {
             jsonArray = jsonArray.map(item => item.jsonCode === jsonCode ? { ...treeObject } : item)
-
-            /*call update api*/
-        } else if (caseSelect == "delete") {
-
+        } else if (action == "delete") {
             jsonArray = jsonArray.filter(item => item.jsonCode !== jsonCode);
-            /*call delete api*/
-
         }
-        console.log("jsonArray2:", jsonArray);
 
-        const newJson: string = JSON.stringify(jsonArray);
-
-        return newJson;
-
+        return JSON.stringify(jsonArray);
     }
+    
     return (
         <Modal
             isOpen={isOpen}
@@ -322,17 +332,15 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
                         <ul id="category-list">
                             {JSON.parse(treeData?.content_json || "[]").map((item: treeContent, index: number) => {
                                 return (
-                                    <li className="category-item">
-
+                                    <li key={item.jsonCode || index} className="category-item">
                                         <span className="category-name">{item.product_Header}</span>
                                         <div className="actions">
-                                            <button type="button" id={item.jsonCode} onClick={(e) => { printContent(item) }} className="category-toggle-bring-btn">帶出資訊</button>
-                                            <button type="button" id={item.jsonCode} disabled={!updateBtn} className={ !updateBtn?'updateBtn-disable':'updateBtn-active'}  onClick={(e) => { postConten("update", treeData?.id, treeData?.hashcode, item?.jsonCode) }}>更新</button>
-                                            <button type="button" id={item.jsonCode} onClick={(e) => { postConten("delete", treeData?.id, treeData?.hashcode, item?.jsonCode) }} className="category-delete-btn">刪除</button>
+                                            <button type="button" id={item.jsonCode} onClick={() => { loadContentToForm(item) }} className="category-toggle-bring-btn">帶出資訊</button>
+                                            <button type="button" id={item.jsonCode} disabled={!updateBtn} className={ !updateBtn?'updateBtn-disable':'updateBtn-active'}  onClick={() => { handleContentSubmit("update", treeData?.id, treeData?.hashcode, item?.jsonCode) }}>更新</button>
+                                            <button type="button" id={item.jsonCode} onClick={() => { handleContentSubmit("delete", treeData?.id, treeData?.hashcode, item?.jsonCode) }} className="category-delete-btn">刪除</button>
                                         </div>
                                     </li>
                                 )
-
                             })}
                         </ul>
                     </div>
@@ -341,7 +349,7 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 
 
                     <div className="text-right">
-                        <button type="button" onClick={(e) => { postConten("insert", treeData?.id, treeData?.hashcode) }} className="submit-btn">儲存商品</button>
+                        <button type="button" onClick={() => { handleContentSubmit("insert", treeData?.id, treeData?.hashcode) }} className="submit-btn">儲存商品</button>
                     </div>
                 </form>
             </div>
@@ -350,5 +358,3 @@ const ModalView = ({ isClose, fetch_Information, errorAlert, successAlert, isOpe
 };
 
 export default React.memo(ModalView);
-
-
